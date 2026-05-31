@@ -1,4 +1,4 @@
-import { collection, addDoc, getDocs, query, where } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
 import { db } from './firebase';
 import { Note } from '../types';
 
@@ -19,12 +19,14 @@ export const createNote = async (
   userId: string,
   title: string,
   subject: string,
-  content: string
+  content: string,
+  subjectColor: string = '#4A90D9'
 ) => {
   const note = {
     userId,
     title,
     subject,
+    subjectColor,
     content,
     createdAt: formatDate(new Date()),
     nextReviewDate: addDays(1), // 첫 복습은 1일 후
@@ -48,4 +50,9 @@ export const getTodayReviews = async (userId: string): Promise<Note[]> => {
   const snapshot = await getDocs(q);
   const allNotes = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Note));
   return allNotes.filter(note => note.nextReviewDate <= today);
+};
+
+// 노트 삭제
+export const deleteNote = async (noteId: string): Promise<void> => {
+  await deleteDoc(doc(db, 'notes', noteId));
 };

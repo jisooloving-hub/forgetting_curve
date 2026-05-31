@@ -3,6 +3,7 @@ export type Note = {
   userId: string;
   title: string;
   subject: string;
+  subjectColor: string;   // 과목 색상 (hex)
   content: string;
   createdAt: string;      // 작성 날짜 (YYYY-MM-DD)
   nextReviewDate: string; // 다음 복습 날짜 (YYYY-MM-DD)

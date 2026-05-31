@@ -12,9 +12,9 @@ graph TB
         Router["Expo Router"]
 
         subgraph Screens["화면 app/"]
-            Auth["auth - login, signup"]
+            Auth["auth - login, signup, forgot-password"]
             Tabs["tabs - 홈, 캘린더, 설정"]
-            Note["note - create, detail, self-check"]
+            Note["note - create, list, detail, self-check"]
         end
 
         subgraph Logic["로직"]
@@ -24,13 +24,13 @@ graph TB
     end
 
     subgraph SVC["서비스 레이어 services/"]
-        AuthSvc["auth.ts - signIn, signUp, logOut"]
-        NotesSvc["notes.ts - createNote, getNotes"]
+        AuthSvc["auth.ts - signIn, signUp, logOut, resetPassword"]
+        NotesSvc["notes.ts - createNote, getNotes, deleteNote"]
         FB["firebase.ts - 초기화"]
     end
 
     subgraph Cloud["외부 서비스"]
-        FBAuth["Firebase Auth - 이메일 인증"]
+        FBAuth["Firebase Auth - 이메일 인증 + 비밀번호 재설정"]
         FSStore["Firestore DB - notes, reviews"]
         Claude["Claude API - AI 문제 생성 (5단계 예정)"]
     end
@@ -50,16 +50,20 @@ flowchart TD
     Check -->|로그인됨| Home
 
     Login --> Signup[회원가입 화면]
+    Login --> Forgot[비밀번호 찾기]
     Login -->|성공| Home
     Signup -->|성공| Home
+    Forgot -->|이메일 발송| Login
 
     Home["홈 - 오늘 복습 목록"]
+    Home -->|전체 노트 보기| List[전체 노트 목록]
     Home -->|+ 버튼| Create[노트 작성]
     Home --> Detail[노트 상세]
     Home --> Cal[캘린더]
     Home --> Set[설정]
 
     Create -->|저장| Home
+    List -->|노트 선택| Detail
     Detail --> SelfCheck[자가 체크]
     SelfCheck -->|잘됨 - 3일 후| Home
     SelfCheck -->|안됨 - 1일 후| Home
@@ -78,6 +82,7 @@ erDiagram
         string userId FK
         string title
         string subject
+        string subjectColor
         string content
         string createdAt
         string nextReviewDate

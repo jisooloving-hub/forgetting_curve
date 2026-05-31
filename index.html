@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>커브터디 — 발표</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+    :root {
+      --bg:    #0f0f1a;
+      --dark:  #1e1e2e;
+      --blue:  #4a90d9;
+      --purp:  #9b59b6;
+      --green: #27ae60;
+      --oran:  #e67e22;
+      --red:   #e74c3c;
+      --white: #ffffff;
+      --lgray: #bbbbcc;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: var(--bg);
+      color: var(--white);
+      scroll-behavior: smooth;
+    }
+
+    /* ── 타이머 바 ── */
+    #timer-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--dark);
+      padding: 10px 24px;
+      border-bottom: 2px solid var(--blue);
+    }
+    #timer-bar .logo { font-family: 'Jua', sans-serif; font-size: 20px; color: var(--blue); }
+    #timer-display { font-size: 24px; font-weight: bold; color: var(--white); letter-spacing: 2px; }
+    #timer-display.warn { color: var(--oran); }
+    #timer-display.over { color: var(--red); }
+    #timer-btn {
+      background: var(--blue);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 20px;
+      font-size: 14px;
+      cursor: pointer;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+    #timer-btn:hover { opacity: 0.85; }
+
+    /* ── 진행 바 ── */
+    #progress-bar {
+      position: fixed;
+      top: 50px; left: 0;
+      height: 4px;
+      background: var(--blue);
+      width: 0%;
+      transition: width 1s linear;
+      z-index: 998;
+    }
+    #progress-bar.warn { background: var(--oran); }
+    #progress-bar.over { background: var(--red); }
+
+    /* ── 섹션 공통 ── */
+    section {
+      min-height: 100vh;
+      padding: 90px 60px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .section-label {
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--blue);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    /* ── 슬라이드 1: 타이틀 ── */
+    #slide-title {
+      background: var(--bg);
+      border-left: 6px solid var(--blue);
+    }
+    #slide-title h1 {
+      font-family: 'Jua', sans-serif;
+      font-size: clamp(56px, 10vw, 96px);
+      color: var(--white);
+      line-height: 1;
+    }
+    #slide-title .en {
+      font-size: clamp(18px, 3vw, 28px);
+      color: var(--blue);
+      margin-top: 10px;
+      letter-spacing: 2px;
+    }
+    .divider {
+      width: 120px;
+      height: 3px;
+      background: var(--blue);
+      margin: 24px 0;
+    }
+    #slide-title .sub {
+      font-size: clamp(14px, 2vw, 18px);
+      color: var(--lgray);
+      line-height: 1.8;
+    }
+    #slide-title .stack {
+      font-size: 13px;
+      color: #666688;
+      margin-top: 10px;
+    }
+    #slide-title .date {
+      font-size: 13px;
+      color: #555566;
+      margin-top: 32px;
+    }
+
+    /* ── 슬라이드 2: 문제 정의 & 비전 ── */
+    #slide-problem {
+      background: var(--bg);
+    }
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 24px;
+    }
+    .problem-left h2 {
+      font-family: 'Jua', sans-serif;
+      font-size: clamp(28px, 4vw, 42px);
+      line-height: 1.3;
+      margin-bottom: 16px;
+    }
+    .problem-left p {
+      font-size: 14px;
+      color: var(--lgray);
+      line-height: 1.8;
+    }
+    .stats-row {
+      display: flex;
+      gap: 16px;
+      margin-top: 28px;
+    }
+    .stat-card {
+      flex: 1;
+      background: #2a1010;
+      border-radius: 12px;
+      padding: 18px 12px;
+      text-align: center;
+    }
+    .stat-label { font-size: 11px; color: var(--lgray); margin-bottom: 6px; }
+    .stat-pct { font-family: 'Jua', sans-serif; font-size: 36px; color: var(--red); }
+    .stat-sub { font-size: 12px; color: var(--lgray); margin-top: 4px; }
+
+    .solution-box {
+      background: #0a182e;
+      border-radius: 16px;
+      padding: 32px;
+    }
+    .solution-box h3 {
+      font-family: 'Jua', sans-serif;
+      font-size: 32px;
+      margin-bottom: 24px;
+    }
+    .sol-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .sol-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+    .sol-title { font-size: 15px; font-weight: bold; margin-bottom: 3px; }
+    .sol-desc { font-size: 13px; color: var(--lgray); }
+
+    .arrow-mid {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 40px;
+      color: var(--blue);
+      align-self: center;
+      display: none;
+    }
+
+    /* ── 슬라이드 3: WBS ── */
+    #slide-wbs {
+      background: #f4f4f8;
+      color: #1e1e2e;
+    }
+    #slide-wbs .section-label { color: var(--blue); }
+    #slide-wbs h2 {
+      font-family: 'Jua', sans-serif;
+      font-size: clamp(22px, 3vw, 30px);
+      color: #1e1e2e;
+      margin-bottom: 6px;
+    }
+    #slide-wbs .wbs-sub { font-size: 13px; color: #888; margin-bottom: 28px; }
+
+    .wbs-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+    }
+    .wbs-col {}
+    .wbs-header {
+      border-radius: 10px 10px 0 0;
+      padding: 12px 8px;
+      text-align: center;
+      font-family: 'Jua', sans-serif;
+      font-size: 15px;
+      color: #fff;
+    }
+    .wbs-item {
+      background: #fff;
+      border: 1px solid #dde;
+      border-radius: 0;
+      padding: 10px;
+      margin-top: 2px;
+      position: relative;
+      overflow: hidden;
+    }
+    .wbs-item:last-child { border-radius: 0 0 8px 8px; }
+    .wbs-item .item-bar {
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 5px;
+    }
+    .wbs-item .item-code { font-size: 9px; color: #aaa; margin-left: 12px; }
+    .wbs-item .item-name { font-size: 11px; color: #333; margin-left: 12px; margin-top: 2px; font-weight: 500; }
+    .wbs-badge {
+      display: inline-block;
+      margin: 6px 0 0 12px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 9px;
+      font-weight: bold;
+      color: #fff;
+    }
+    .badge-done  { background: #27ae60; }
+    .badge-wip   { background: #f39c12; }
+    .badge-todo  { background: #cccccc; color: #555; }
+
+    .legend {
+      display: flex;
+      gap: 20px;
+      justify-content: flex-end;
+      margin-bottom: 12px;
+      font-size: 12px;
+    }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+
+    /* ── 슬라이드 4: 아키텍처 ── */
+    #slide-arch {
+      background: #fff;
+      color: #1e1e2e;
+    }
+    #slide-arch .section-label { color: var(--blue); }
+    #slide-arch h2 {
+      font-family: 'Jua', sans-serif;
+      font-size: clamp(22px, 3vw, 30px);
+      color: #1e1e2e;
+      margin-bottom: 6px;
+    }
+    #slide-arch .arch-sub { font-size: 13px; color: #888; margin-bottom: 24px; }
+    .mermaid-wrap {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      overflow-x: auto;
+      border: 1px solid #eee;
+    }
+    .mermaid { max-width: 100%; }
+
+    /* ── 반응형 ── */
+    @media (max-width: 860px) {
+      section { padding: 80px 24px 40px; }
+      .problem-grid { grid-template-columns: 1fr; }
+      .wbs-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .wbs-grid { grid-template-columns: repeat(2, 1fr); }
+      .stats-row { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- 타이머 바 -->
+<div id="timer-bar">
+  <span class="logo">커브터디</span>
+  <span id="timer-display">2:00</span>
+  <button id="timer-btn" onclick="startTimer()">▶ 타이머 시작</button>
+</div>
+<div id="progress-bar"></div>
+
+<!-- ════════════════════ 슬라이드 1: 타이틀 ════════════════════ -->
+<section id="slide-title">
+  <div class="section-label">APP PRESENTATION · 2026</div>
+  <h1>커브터디</h1>
+  <div class="en">curvetudy</div>
+  <div class="divider"></div>
+  <p class="sub">
+    망각곡선 이론 기반 &nbsp;·&nbsp; 복습 타이밍 자동 추천 앱<br>
+    에빙하우스의 망각곡선을 활용해 최적의 복습 시점을 알려주는 모바일 앱
+  </p>
+  <p class="stack">React Native (Expo) &nbsp;·&nbsp; Firebase &nbsp;·&nbsp; Claude API</p>
+  <p class="date">2026. 05</p>
+</section>
+
+<!-- ════════════════════ 슬라이드 2: 문제 정의 & 비전 ════════════════════ -->
+<section id="slide-problem">
+  <div class="section-label">PROBLEM → SOLUTION</div>
+  <div class="problem-grid">
+
+    <!-- 왼쪽: 문제 -->
+    <div class="problem-left">
+      <div style="font-size:12px;color:var(--red);font-weight:bold;margin-bottom:10px;">문제 정의</div>
+      <h2>왜 우리는<br>공부해도 잊을까?</h2>
+      <p>
+        에빙하우스(Ebbinghaus, 1885)의 연구에 따르면<br>
+        사람은 학습 후 시간이 지날수록 기억이 급격히 감소합니다.<br>
+        반복 복습 없이는 장기 기억으로 이어지지 않습니다.
+      </p>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">20분 후</div>
+          <div class="stat-pct">42%</div>
+          <div class="stat-sub">망각</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">1일 후</div>
+          <div class="stat-pct">70%</div>
+          <div class="stat-sub">망각</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">1주일 후</div>
+          <div class="stat-pct">77%</div>
+          <div class="stat-sub">망각</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 오른쪽: 해결 -->
+    <div class="solution-box">
+      <div style="font-size:12px;color:var(--blue);font-weight:bold;margin-bottom:8px;">해결책</div>
+      <h3>커브터디</h3>
+      <div class="sol-item">
+        <div class="sol-icon">📝</div>
+        <div>
+          <div class="sol-title">노트 작성</div>
+          <div class="sol-desc">공부한 내용을 노트로 기록</div>
+        </div>
+      </div>
+      <div class="sol-item">
+        <div class="sol-icon">⏰</div>
+        <div>
+          <div class="sol-title">자동 계산</div>
+          <div class="sol-desc">망각곡선 기반 최적 복습 시점 계산</div>
+        </div>
+      </div>
+      <div class="sol-item">
+        <div class="sol-icon">✅</div>
+        <div>
+          <div class="sol-title">자가 체크</div>
+          <div class="sol-desc">잘됨 → 3일 후 &nbsp;/&nbsp; 안됨 → 1일 후</div>
+        </div>
+      </div>
+      <div class="sol-item">
+        <div class="sol-icon">🤖</div>
+        <div>
+          <div class="sol-title">AI 문제 생성</div>
+          <div class="sol-desc">Claude API로 노트 기반 퀴즈 자동 생성</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════ 슬라이드 3: WBS ════════════════════ -->
+<section id="slide-wbs">
+  <div class="section-label">WBS</div>
+  <h2>프로젝트 작업 분류</h2>
+  <p class="wbs-sub">Work Breakdown Structure &nbsp;|&nbsp; 커브터디 전체 개발 현황</p>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#27ae60"></div>완료</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f39c12"></div>진행 중</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ccc"></div>예정</div>
+  </div>
+
+  <div class="wbs-grid">
+
+    <!-- 기획 -->
+    <div class="wbs-col">
+      <div class="wbs-header" style="background:#4a90d9;">기획</div>
+      <div class="wbs-item">
+        <div class="item-bar" style="background:#4a90d9;"></div>
+        <div class="item-code">1.1</div>
+        <div class="item-name">앱 기획 (ARD 작성)</div>
+        <span class="wbs-badge badge-done">✅ 완료</span>
+      </div>
+      <div class="wbs-item">
+        <div class="item-bar" style="background:#4a90d9;"></div>
+        <div class="item-code">1.2</div>
+        <div class="item-name">기술 스택 선택</div>
+        <span class="wbs-badge badge-done">✅ 완료</span>
+      </div>
+    </div>
+
+    <!-- 설계 -->
+    <div class="wbs-col">
+      <div class="wbs-header" style="background:#9b59b6;">설계</div>
+      <div class="wbs-item">
+        <div class="item-bar" style="background:#9b59b6;"></div>
+        <div class="item-code">2.1</div>
+        <div class="item-name">시스템 아키텍처</div>
+        <span class="wbs-badge badge-done">✅ 완료</span>
+      </div>
+      <div class="wbs-item">
+        <div class="item-bar" style="background:#9b59b6;"></div>
+        <div class="item-code">2.2</div>
+        <div class="item-name">DB 스키마 설계</div>
+        <span class="wbs-badge badge-done">✅ 완료</span>
+      </div>
+      <div class="wbs-item">
+        <div class="item-bar" style="background:#9b59b6;"></div>
+        <div class="item-code">2.3</div>
+        <div class="item-name">화면(UI) 설계</div>
+        <span class="wbs-badge badge-done">✅ 완료</span>
+      </div>
+    </div>
+
+    <!-- 개발 -->
+    <div class="wbs-col">
+      <div class="wbs-header" style="background:#27ae60;">개발</div>
+      <div class="wbs-item">
+        <div class="item-bar" style="background:#27ae60;"></div>
+        <div class="item-code">3.1</div>
+        <div class="item-name">프로젝트 세팅</div>
+        <span class="wbs-badge badge-done">✅ 완료</span>
+      </div>
+      <div class="wbs-item">
+        <div class="item-bar" style="background:#27ae60;"></div>
+        <div class="item-code">3.2</div>
+        <div class="item-name">인증 (로그인/회원가입)</div>
+        <span class="wbs-badge badge-done">✅ 완료</span>
+      </div>
+      <div class="wbs-item">
+        <div class="item-bar" style="background:#27ae60;"></div>
+        <div class="item-code">3.3</div>
+        <div class="item-name">핵심 기능 (노트·복습)</div>
+        <span class="wbs-badge badge-wip">🔄 진행 중</span>
+      </div>
+      <div class="wbs-item">
+        <div class="item-bar" style="background:#27ae60;"></div>
+        <div class="item-code">3.4</div>
+        <div class="item-name">캘린더 + 스트릭</div>
+        <span class="wbs-badge badge-todo">⬜ 예정</span>
+      </div>
+      <div class="wbs-item">
+        <div class="item-bar" style="background:#27ae60;"></div>
+        <div class="item-code">3.5</div>
+        <div class="item-name">Claude API 연동</div>
+        <span class="wbs-badge badge-todo">⬜ 예정</span>
+      </div>
+      <div class="wbs-item">
+        <div class="item-bar" style="background:#27ae60;"></div>
+        <div class="item-code">3.6</div>
+        <div class="item-name">UI 마무리·설정</div>
+        <span class="wbs-badge badge-todo">⬜ 예정</span>
+      </div>
+    </div>
+
+    <!-- 테스트 -->
+    <div class="wbs-col">
+      <div class="wbs-header" style="background:#e67e22;">테스트</div>
+      <div class="wbs-item">
+        <div class="item-bar" style="background:#e67e22;"></div>
+        <div class="item-code">4.1</div>
+        <div class="item-name">기능 테스트</div>
+        <span class="wbs-badge badge-todo">⬜ 예정</span>
+      </div>
+      <div class="wbs-item">
+        <div class="item-bar" style="background:#e67e22;"></div>
+        <div class="item-code">4.2</div>
+        <div class="item-name">UI/UX 테스트</div>
+        <span class="wbs-badge badge-todo">⬜ 예정</span>
+      </div>
+    </div>
+
+    <!-- 배포 -->
+    <div class="wbs-col">
+      <div class="wbs-header" style="background:#e74c3c;">배포</div>
+      <div class="wbs-item">
+        <div class="item-bar" style="background:#e74c3c;"></div>
+        <div class="item-code">5.1</div>
+        <div class="item-name">앱 배포</div>
+        <span class="wbs-badge badge-todo">⬜ 예정</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ════════════════════ 슬라이드 4: 아키텍처 ════════════════════ -->
+<section id="slide-arch">
+  <div class="section-label">ARCHITECTURE</div>
+  <h2>시스템 아키텍처</h2>
+  <p class="arch-sub">Expo React Native &nbsp;·&nbsp; Firebase &nbsp;·&nbsp; Claude API 연동 구조</p>
+  <div class="mermaid-wrap">
+    <div class="mermaid">
+graph TB
+    subgraph FE["Expo React Native - 프론트엔드"]
+        Router["Expo Router"]
+        subgraph Screens["화면 app/"]
+            Auth["auth\nlogin · signup · forgot-password"]
+            Tabs["tabs\n홈 · 캘린더 · 설정"]
+            Note["note\ncreate · list · detail · self-check"]
+        end
+        subgraph Logic["로직"]
+            Utils["utils - 망각곡선 계산"]
+            Types["types - TypeScript 타입"]
+        end
+    end
+    subgraph SVC["서비스 레이어 services/"]
+        AuthSvc["auth.ts\nsignIn · signUp · logOut · resetPassword"]
+        NotesSvc["notes.ts\ncreateNote · getNotes · deleteNote"]
+        FB["firebase.ts - 초기화"]
+    end
+    subgraph Cloud["외부 서비스"]
+        FBAuth["Firebase Auth\n이메일 인증 + 비밀번호 재설정"]
+        FSStore["Firestore DB\nnotes · reviews"]
+        Claude["Claude API\nAI 문제 생성 (예정)"]
+    end
+    Router --> Auth & Tabs & Note
+    Auth --> AuthSvc
+    Note --> NotesSvc
+    AuthSvc & NotesSvc --> FB
+    FB --> FBAuth & FSStore
+    Note -.->|"예정"| Claude
+    </div>
+  </div>
+</section>
+
+<!-- 타이머 JS -->
+<script>
+  let totalSec = 120;
+  let remaining = totalSec;
+  let timerInterval = null;
+  let running = false;
+
+  const display = document.getElementById('timer-display');
+  const bar     = document.getElementById('progress-bar');
+  const btn     = document.getElementById('timer-btn');
+
+  function updateDisplay() {
+    const m = Math.floor(Math.abs(remaining) / 60);
+    const s = Math.abs(remaining) % 60;
+    const sign = remaining < 0 ? '-' : '';
+    display.textContent = sign + m + ':' + String(s).padStart(2, '0');
+
+    const pct = ((totalSec - remaining) / totalSec) * 100;
+    bar.style.width = Math.min(pct, 100) + '%';
+
+    display.className = '';
+    bar.className = '';
+    if (remaining <= 0) {
+      display.classList.add('over');
+      bar.classList.add('over');
+    } else if (remaining <= 30) {
+      display.classList.add('warn');
+      bar.classList.add('warn');
+    }
+  }
+
+  function startTimer() {
+    if (running) {
+      clearInterval(timerInterval);
+      running = false;
+      btn.textContent = '▶ 재시작';
+      return;
+    }
+    if (remaining <= -600) {
+      remaining = totalSec;
+      updateDisplay();
+    }
+    running = true;
+    btn.textContent = '⏸ 일시정지';
+    timerInterval = setInterval(() => {
+      remaining--;
+      updateDisplay();
+      if (remaining <= -600) {
+        clearInterval(timerInterval);
+        running = false;
+        btn.textContent = '▶ 다시 시작';
+      }
+    }, 1000);
+  }
+
+  mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
+</script>
+</body>
+</html>

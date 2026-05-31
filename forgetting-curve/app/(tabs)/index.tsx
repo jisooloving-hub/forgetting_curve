@@ -1,22 +1,35 @@
-import { useEffect, useState } from 'react';
+import { useState, useCallback } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useRouter, useFocusEffect } from 'expo-router';
-import { useCallback } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { auth } from '../../services/firebase';
-import { getTodayReviews } from '../../services/notes';
+import { getTodayReviews, deleteNote } from '../../services/notes';
 import { Note } from '../../types';
 
 export default function HomeScreen() {
   const router = useRouter();
   const [reviews, setReviews] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
+  const [openMenuId, setOpenMenuId] = useState<string | null>(null);
+  const [showNew, setShowNew] = useState(false);
 
   // 화면에 포커스될 때마다 오늘 복습 목록 새로 불러오기
   useFocusEffect(
     useCallback(() => {
       fetchTodayReviews();
+      checkNewBadge();
     }, [])
   );
+
+  const checkNewBadge = async () => {
+    const created = await AsyncStorage.getItem('lastNoteCreatedAt');
+    const visited = await AsyncStorage.getItem('lastListVisitedAt');
+    if (created && (!visited || Number(created) > Number(visited))) {
+      setShowNew(true);
+    } else {
+      setShowNew(false);
+    }
+  };
 
   const fetchTodayReviews = async () => {
     const userId = auth.currentUser?.uid;
@@ -32,17 +45,38 @@ export default function HomeScreen() {
     }
   };
 
+  const handleDelete = async (item: Note) => {
+    setOpenMenuId(null);
+    await deleteNote(item.id);
+    setReviews(prev => prev.filter(n => n.id !== item.id));
+  };
+
   return (
     <View style={styles.container}>
 
       {/* 헤더 */}
-      <Text style={styles.headerTitle}>오늘의 복습</Text>
+      <View style={styles.headerRow}>
+        <Text style={styles.headerTitle}>커브터디</Text>
+        <Text style={styles.headerSub}>curvetudy</Text>
+      </View>
 
       {/* 스트릭 */}
       <View style={styles.streakBox}>
         <Text style={styles.streakEmoji}>🔥</Text>
         <Text style={styles.streakText}>0일 연속 복습 중</Text>
       </View>
+
+      {/* 전체 노트 보기 버튼 */}
+      <TouchableOpacity
+        style={styles.allNotesButton}
+        onPress={() => router.push('/note/list')}
+      >
+        <View style={styles.allNotesLeft}>
+          <Text style={styles.allNotesText}>📋  저장된 전체 노트 보기</Text>
+          {showNew && <Text style={styles.newBadge}>new</Text>}
+        </View>
+        <Text style={styles.allNotesArrow}>›</Text>
+      </TouchableOpacity>
 
       {/* 오늘 복습 목록 */}
       {loading ? (
@@ -57,14 +91,39 @@ export default function HomeScreen() {
           data={reviews}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.noteCard}
-              onPress={() => router.push(`/note/${item.id}`)}
-            >
-              <Text style={styles.noteSubject}>{item.subject || '과목 없음'}</Text>
-              <Text style={styles.noteTitle}>{item.title}</Text>
-              <Text style={styles.noteDate}>복습 예정일: {item.nextReviewDate}</Text>
-            </TouchableOpacity>
+            <View style={styles.noteCardWrapper}>
+              <TouchableOpacity
+                style={styles.noteCard}
+                onPress={() => {
+                  setOpenMenuId(null);
+                  router.push(`/note/${item.id}`);
+                }}
+              >
+                <Text style={styles.noteSubject}>{item.subject || '과목 없음'}</Text>
+                <Text style={styles.noteTitle}>{item.title}</Text>
+                <Text style={styles.noteDate}>복습 예정일: {item.nextReviewDate}</Text>
+              </TouchableOpacity>
+
+              {/* 더보기 버튼 */}
+              <TouchableOpacity
+                style={styles.menuButton}
+                onPress={() => setOpenMenuId(openMenuId === item.id ? null : item.id)}
+              >
+                <Text style={styles.menuDots}>⋮</Text>
+              </TouchableOpacity>
+
+              {/* 드롭다운 메뉴 */}
+              {openMenuId === item.id && (
+                <View style={styles.dropdown}>
+                  <TouchableOpacity
+                    style={styles.dropdownItem}
+                    onPress={() => handleDelete(item)}
+                  >
+                    <Text style={styles.dropdownDelete}>🗑 삭제</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
           )}
         />
       )}
@@ -88,10 +147,23 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingHorizontal: 24,
   },
+  headerRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    gap: 8,
+    marginBottom: 16,
+  },
   headerTitle: {
     fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 16,
+    color: '#1a1a2e',
+    fontFamily: 'Jua',
+  },
+  headerSub: {
+    fontSize: 14,
+    color: '#aaa',
+    marginBottom: 4,
+    fontFamily: 'Arial Rounded MT Bold',
   },
   streakBox: {
     flexDirection: 'row',
@@ -125,11 +197,47 @@ const styles = StyleSheet.create({
     color: '#888',
     marginTop: 8,
   },
+  noteCardWrapper: {
+    position: 'relative',
+    marginBottom: 12,
+  },
   noteCard: {
     backgroundColor: '#f5f5f5',
     padding: 16,
     borderRadius: 10,
-    marginBottom: 12,
+  },
+  menuButton: {
+    position: 'absolute',
+    top: 8,
+    right: 8,
+    padding: 6,
+  },
+  menuDots: {
+    fontSize: 20,
+    color: '#888',
+    lineHeight: 20,
+  },
+  dropdown: {
+    position: 'absolute',
+    top: 36,
+    right: 8,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 5,
+    zIndex: 10,
+    minWidth: 100,
+  },
+  dropdownItem: {
+    paddingVertical: 10,
+    paddingHorizontal: 16,
+  },
+  dropdownDelete: {
+    fontSize: 14,
+    color: '#e53935',
   },
   noteSubject: {
     fontSize: 12,
@@ -145,6 +253,35 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#aaa',
     marginTop: 6,
+  },
+  allNotesButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: '#f5f5f5',
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 18,
+    marginBottom: 16,
+  },
+  allNotesLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  allNotesText: {
+    fontSize: 15,
+    color: '#333',
+    fontWeight: '500',
+  },
+  newBadge: {
+    fontSize: 12,
+    color: '#e91e8c',
+    fontWeight: 'bold',
+  },
+  allNotesArrow: {
+    fontSize: 20,
+    color: '#aaa',
   },
   fab: {
     position: 'absolute',

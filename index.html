@@ -29,51 +29,10 @@
       scroll-behavior: smooth;
     }
 
-    /* ── 타이머 바 ── */
-    #timer-bar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 999;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: var(--dark);
-      padding: 10px 24px;
-      border-bottom: 2px solid var(--blue);
-    }
-    #timer-bar .logo { font-family: 'Jua', sans-serif; font-size: 20px; color: var(--blue); }
-    #timer-display { font-size: 24px; font-weight: bold; color: var(--white); letter-spacing: 2px; }
-    #timer-display.warn { color: var(--oran); }
-    #timer-display.over { color: var(--red); }
-    #timer-btn {
-      background: var(--blue);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 8px 20px;
-      font-size: 14px;
-      cursor: pointer;
-      font-family: 'Noto Sans KR', sans-serif;
-    }
-    #timer-btn:hover { opacity: 0.85; }
-
-    /* ── 진행 바 ── */
-    #progress-bar {
-      position: fixed;
-      top: 50px; left: 0;
-      height: 4px;
-      background: var(--blue);
-      width: 0%;
-      transition: width 1s linear;
-      z-index: 998;
-    }
-    #progress-bar.warn { background: var(--oran); }
-    #progress-bar.over { background: var(--red); }
-
     /* ── 섹션 공통 ── */
     section {
       min-height: 100vh;
-      padding: 90px 60px 60px;
+      padding: 60px 60px 60px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -296,14 +255,6 @@
   </style>
 </head>
 <body>
-
-<!-- 타이머 바 -->
-<div id="timer-bar">
-  <span class="logo">커브터디</span>
-  <span id="timer-display">2:00</span>
-  <button id="timer-btn" onclick="startTimer()">▶ 타이머 시작</button>
-</div>
-<div id="progress-bar"></div>
 
 <!-- ════════════════════ 슬라이드 1: 타이틀 ════════════════════ -->
 <section id="slide-title">
@@ -555,61 +506,7 @@ graph TB
   </div>
 </section>
 
-<!-- 타이머 JS -->
 <script>
-  let totalSec = 120;
-  let remaining = totalSec;
-  let timerInterval = null;
-  let running = false;
-
-  const display = document.getElementById('timer-display');
-  const bar     = document.getElementById('progress-bar');
-  const btn     = document.getElementById('timer-btn');
-
-  function updateDisplay() {
-    const m = Math.floor(Math.abs(remaining) / 60);
-    const s = Math.abs(remaining) % 60;
-    const sign = remaining < 0 ? '-' : '';
-    display.textContent = sign + m + ':' + String(s).padStart(2, '0');
-
-    const pct = ((totalSec - remaining) / totalSec) * 100;
-    bar.style.width = Math.min(pct, 100) + '%';
-
-    display.className = '';
-    bar.className = '';
-    if (remaining <= 0) {
-      display.classList.add('over');
-      bar.classList.add('over');
-    } else if (remaining <= 30) {
-      display.classList.add('warn');
-      bar.classList.add('warn');
-    }
-  }
-
-  function startTimer() {
-    if (running) {
-      clearInterval(timerInterval);
-      running = false;
-      btn.textContent = '▶ 재시작';
-      return;
-    }
-    if (remaining <= -600) {
-      remaining = totalSec;
-      updateDisplay();
-    }
-    running = true;
-    btn.textContent = '⏸ 일시정지';
-    timerInterval = setInterval(() => {
-      remaining--;
-      updateDisplay();
-      if (remaining <= -600) {
-        clearInterval(timerInterval);
-        running = false;
-        btn.textContent = '▶ 다시 시작';
-      }
-    }, 1000);
-  }
-
   mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose' });
 </script>
 </body>

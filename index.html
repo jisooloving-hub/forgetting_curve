@@ -3,14 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>커브터디 — 발표</title>
+  <title>커브터디 — 기말 발표</title>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@300;400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@300;400;500;700&family=Source+Code+Pro:wght@400;600&display=swap');
 
     :root {
       --bg:    #0f0f1a;
       --dark:  #1e1e2e;
+      --card:  #16162a;
       --blue:  #4a90d9;
       --purp:  #9b59b6;
       --green: #27ae60;
@@ -18,6 +19,7 @@
       --red:   #e74c3c;
       --white: #ffffff;
       --lgray: #bbbbcc;
+      --dgray: #555566;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -29,10 +31,9 @@
       scroll-behavior: smooth;
     }
 
-    /* ── 섹션 공통 ── */
     section {
       min-height: 100vh;
-      padding: 60px 60px 60px;
+      padding: 64px 72px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -43,221 +44,453 @@
       letter-spacing: 3px;
       color: var(--blue);
       text-transform: uppercase;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
-
-    /* ── 슬라이드 1: 타이틀 ── */
-    #slide-title {
-      background: var(--bg);
-      border-left: 6px solid var(--blue);
-    }
-    #slide-title h1 {
-      font-family: 'Jua', sans-serif;
-      font-size: clamp(56px, 10vw, 96px);
-      color: var(--white);
-      line-height: 1;
-    }
-    #slide-title .en {
-      font-size: clamp(18px, 3vw, 28px);
-      color: var(--blue);
-      margin-top: 10px;
-      letter-spacing: 2px;
-    }
-    .divider {
-      width: 120px;
-      height: 3px;
+    .section-num {
+      display: inline-block;
       background: var(--blue);
-      margin: 24px 0;
+      color: #fff;
+      font-size: 11px;
+      font-weight: bold;
+      padding: 2px 10px;
+      border-radius: 20px;
+      letter-spacing: 1px;
+      margin-bottom: 14px;
     }
-    #slide-title .sub {
-      font-size: clamp(14px, 2vw, 18px);
-      color: var(--lgray);
-      line-height: 1.8;
-    }
-    #slide-title .stack {
-      font-size: 13px;
-      color: #666688;
-      margin-top: 10px;
-    }
-    #slide-title .date {
-      font-size: 13px;
-      color: #555566;
-      margin-top: 32px;
-    }
-
-    /* ── 슬라이드 2: 문제 정의 & 비전 ── */
-    #slide-problem {
-      background: var(--bg);
-    }
-    .problem-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      margin-top: 24px;
-    }
-    .problem-left h2 {
+    h2.slide-title {
       font-family: 'Jua', sans-serif;
-      font-size: clamp(28px, 4vw, 42px);
-      line-height: 1.3;
-      margin-bottom: 16px;
+      font-size: clamp(24px, 3.5vw, 36px);
+      margin-bottom: 6px;
     }
-    .problem-left p {
+    .slide-sub {
       font-size: 14px;
       color: var(--lgray);
-      line-height: 1.8;
+      margin-bottom: 28px;
     }
-    .stats-row {
-      display: flex;
-      gap: 16px;
-      margin-top: 28px;
+    .divider { width: 80px; height: 3px; background: var(--blue); margin: 20px 0; }
+    .tag {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      margin: 3px 3px 3px 0;
     }
-    .stat-card {
-      flex: 1;
-      background: #2a1010;
-      border-radius: 12px;
-      padding: 18px 12px;
-      text-align: center;
-    }
-    .stat-label { font-size: 11px; color: var(--lgray); margin-bottom: 6px; }
-    .stat-pct { font-family: 'Jua', sans-serif; font-size: 36px; color: var(--red); }
-    .stat-sub { font-size: 12px; color: var(--lgray); margin-top: 4px; }
+    .tag-blue  { background: rgba(74,144,217,.2); color: var(--blue); border: 1px solid rgba(74,144,217,.4); }
+    .tag-green { background: rgba(39,174,96,.2);  color: #2ecc71;     border: 1px solid rgba(39,174,96,.4); }
+    .tag-purp  { background: rgba(155,89,182,.2); color: #ba74d9;     border: 1px solid rgba(155,89,182,.4); }
+    .tag-oran  { background: rgba(230,126,34,.2); color: var(--oran); border: 1px solid rgba(230,126,34,.4); }
 
-    .solution-box {
-      background: #0a182e;
-      border-radius: 16px;
-      padding: 32px;
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+      background: rgba(15,15,26,.92);
+      backdrop-filter: blur(8px);
+      display: flex; gap: 0; overflow-x: auto;
+      border-bottom: 1px solid #222240;
     }
-    .solution-box h3 {
+    nav a {
+      flex-shrink: 0;
+      color: var(--lgray); text-decoration: none;
+      font-size: 11px; padding: 12px 16px;
+      white-space: nowrap;
+      border-bottom: 2px solid transparent;
+      transition: color .2s, border-color .2s;
+    }
+    nav a:hover { color: #fff; border-bottom-color: var(--blue); }
+
+    /* ─────── SLIDE 1 TITLE ─────── */
+    #s1 { background: var(--bg); border-left: 6px solid var(--blue); }
+    #s1 h1 {
       font-family: 'Jua', sans-serif;
-      font-size: 32px;
-      margin-bottom: 24px;
+      font-size: clamp(56px, 10vw, 100px);
+      line-height: 1;
     }
-    .sol-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
+    #s1 .en { font-size: clamp(16px, 2.5vw, 24px); color: var(--blue); margin-top: 8px; letter-spacing: 3px; }
+    #s1 .sub { font-size: clamp(13px, 1.8vw, 17px); color: var(--lgray); line-height: 1.9; }
+    #s1 .stack { font-size: 13px; color: var(--dgray); margin-top: 8px; }
+    #s1 .meta  { font-size: 12px; color: #3a3a55; margin-top: 28px; }
+
+    /* ─────── SLIDE 2 VISION ─────── */
+    #s2 { background: #0a0a18; }
+    .vision-box {
+      background: linear-gradient(135deg, #0f1e3a 0%, #1a0a2e 100%);
+      border-radius: 20px;
+      padding: 48px;
+      border-left: 6px solid var(--blue);
+      margin-top: 8px;
+    }
+    .vision-quote {
+      font-family: 'Jua', sans-serif;
+      font-size: clamp(22px, 4vw, 42px);
+      line-height: 1.5;
       margin-bottom: 20px;
     }
-    .sol-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
-    .sol-title { font-size: 15px; font-weight: bold; margin-bottom: 3px; }
-    .sol-desc { font-size: 13px; color: var(--lgray); }
-
-    .arrow-mid {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 40px;
-      color: var(--blue);
-      align-self: center;
-      display: none;
+    .vision-desc { font-size: 15px; color: var(--lgray); line-height: 1.9; }
+    .vision-keywords { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+    .vision-kw {
+      background: rgba(74,144,217,.1);
+      border: 1px solid rgba(74,144,217,.3);
+      border-radius: 8px;
+      padding: 10px 18px;
+      font-size: 14px;
+      color: #8ab8e8;
     }
 
-    /* ── 슬라이드 3: WBS ── */
-    #slide-wbs {
-      background: #f4f4f8;
-      color: #1e1e2e;
-    }
-    #slide-wbs .section-label { color: var(--blue); }
-    #slide-wbs h2 {
+    /* ─────── SLIDE 3 PROBLEM ─────── */
+    #s3 { background: var(--bg); }
+    .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 8px; }
+    .problem-left h3 {
       font-family: 'Jua', sans-serif;
-      font-size: clamp(22px, 3vw, 30px);
-      color: #1e1e2e;
-      margin-bottom: 6px;
+      font-size: clamp(24px, 3.5vw, 38px);
+      line-height: 1.3; margin-bottom: 14px;
     }
-    #slide-wbs .wbs-sub { font-size: 13px; color: #888; margin-bottom: 28px; }
+    .problem-left p { font-size: 14px; color: var(--lgray); line-height: 1.9; }
+    .stats-row { display: flex; gap: 14px; margin-top: 24px; }
+    .stat-card {
+      flex: 1; background: #2a1010; border-radius: 12px;
+      padding: 16px 10px; text-align: center;
+    }
+    .stat-label { font-size: 11px; color: var(--lgray); margin-bottom: 4px; }
+    .stat-pct   { font-family: 'Jua', sans-serif; font-size: 36px; color: var(--red); }
+    .stat-sub   { font-size: 11px; color: var(--lgray); margin-top: 3px; }
+    .solution-box { background: #0a182e; border-radius: 16px; padding: 28px; }
+    .solution-box h4 { font-family: 'Jua', sans-serif; font-size: 28px; margin-bottom: 20px; }
+    .sol-item { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 18px; }
+    .sol-icon { font-size: 20px; flex-shrink: 0; margin-top: 2px; }
+    .sol-title { font-size: 14px; font-weight: bold; margin-bottom: 2px; }
+    .sol-desc  { font-size: 12px; color: var(--lgray); }
 
-    .wbs-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 14px;
-    }
-    .wbs-col {}
+    /* ─────── SLIDE 4 WBS ─────── */
+    #s4 { background: #f4f4f8; color: #1e1e2e; }
+    #s4 .section-label, #s4 .section-num { color: var(--blue); }
+    #s4 h2.slide-title { color: #1e1e2e; }
+    #s4 .slide-sub { color: #888; }
+    .legend { display: flex; gap: 18px; justify-content: flex-end; margin-bottom: 10px; font-size: 12px; color: #555; }
+    .legend-item { display: flex; align-items: center; gap: 5px; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 3px; }
+    .wbs-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; }
     .wbs-header {
-      border-radius: 10px 10px 0 0;
-      padding: 12px 8px;
-      text-align: center;
-      font-family: 'Jua', sans-serif;
-      font-size: 15px;
-      color: #fff;
+      border-radius: 8px 8px 0 0; padding: 10px 8px;
+      text-align: center; font-family: 'Jua', sans-serif;
+      font-size: 14px; color: #fff;
     }
     .wbs-item {
-      background: #fff;
-      border: 1px solid #dde;
-      border-radius: 0;
-      padding: 10px;
-      margin-top: 2px;
-      position: relative;
-      overflow: hidden;
+      background: #fff; border: 1px solid #dde;
+      padding: 9px 9px 9px 14px; margin-top: 2px;
+      position: relative; overflow: hidden;
     }
-    .wbs-item:last-child { border-radius: 0 0 8px 8px; }
-    .wbs-item .item-bar {
-      position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 5px;
-    }
-    .wbs-item .item-code { font-size: 9px; color: #aaa; margin-left: 12px; }
-    .wbs-item .item-name { font-size: 11px; color: #333; margin-left: 12px; margin-top: 2px; font-weight: 500; }
+    .wbs-item:last-child { border-radius: 0 0 6px 6px; }
+    .item-bar { position: absolute; left:0; top:0; bottom:0; width:4px; }
+    .item-code { font-size: 9px; color: #aaa; }
+    .item-name { font-size: 11px; color: #333; margin-top: 2px; font-weight: 500; }
     .wbs-badge {
-      display: inline-block;
-      margin: 6px 0 0 12px;
-      padding: 2px 8px;
-      border-radius: 4px;
-      font-size: 9px;
-      font-weight: bold;
-      color: #fff;
+      display: inline-block; margin: 5px 0 0; padding: 2px 8px;
+      border-radius: 4px; font-size: 9px; font-weight: bold; color: #fff;
     }
-    .badge-done  { background: #27ae60; }
-    .badge-wip   { background: #f39c12; }
-    .badge-todo  { background: #cccccc; color: #555; }
+    .badge-done { background: #27ae60; }
+    .badge-wip  { background: #f39c12; }
+    .badge-todo { background: #ccc; color: #555; }
 
-    .legend {
-      display: flex;
-      gap: 20px;
-      justify-content: flex-end;
-      margin-bottom: 12px;
-      font-size: 12px;
+    /* ─────── SLIDE 5 PROGRESS ─────── */
+    #s5 { background: var(--bg); }
+    .timeline { display: flex; flex-direction: column; gap: 0; margin-top: 8px; }
+    .tl-item { display: flex; gap: 24px; align-items: flex-start; position: relative; padding-bottom: 28px; }
+    .tl-item:last-child { padding-bottom: 0; }
+    .tl-item:not(:last-child)::before {
+      content: '';
+      position: absolute; left: 19px; top: 40px;
+      width: 2px; bottom: 0;
+      background: #2a2a44;
     }
-    .legend-item { display: flex; align-items: center; gap: 6px; }
-    .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+    .tl-dot {
+      width: 40px; height: 40px; flex-shrink: 0;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 16px; border: 3px solid;
+      background: var(--bg);
+    }
+    .tl-content { flex: 1; padding-top: 8px; }
+    .tl-phase { font-size: 11px; color: var(--lgray); margin-bottom: 3px; }
+    .tl-title { font-size: 16px; font-weight: bold; margin-bottom: 4px; }
+    .tl-items { font-size: 13px; color: var(--lgray); line-height: 1.8; }
 
-    /* ── 슬라이드 4: 아키텍처 ── */
-    #slide-arch {
-      background: #fff;
-      color: #1e1e2e;
+    /* ─────── SLIDE 6 TECH ─────── */
+    #s6 { background: #0a0a18; }
+    .tech-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 8px; }
+    .tech-card {
+      background: var(--card); border-radius: 14px;
+      padding: 24px; border: 1px solid #1e1e3a;
     }
-    #slide-arch .section-label { color: var(--blue); }
-    #slide-arch h2 {
-      font-family: 'Jua', sans-serif;
-      font-size: clamp(22px, 3vw, 30px);
-      color: #1e1e2e;
-      margin-bottom: 6px;
-    }
-    #slide-arch .arch-sub { font-size: 13px; color: #888; margin-bottom: 24px; }
-    .mermaid-wrap {
-      background: #fff;
-      border-radius: 12px;
-      padding: 20px;
-      overflow-x: auto;
-      border: 1px solid #eee;
-    }
-    .mermaid { max-width: 100%; }
+    .tech-icon { font-size: 32px; margin-bottom: 12px; }
+    .tech-name { font-size: 16px; font-weight: bold; margin-bottom: 6px; }
+    .tech-desc { font-size: 13px; color: var(--lgray); line-height: 1.7; }
+    .tech-why  { font-size: 12px; color: var(--blue); margin-top: 10px; font-style: italic; }
 
-    /* ── 반응형 ── */
-    @media (max-width: 860px) {
+    /* ─────── SLIDE 7 ARCH ─────── */
+    #s7 { background: #fff; color: #1e1e2e; }
+    #s7 .section-label, #s7 .section-num { color: var(--blue); }
+    #s7 h2.slide-title { color: #1e1e2e; }
+    #s7 .slide-sub { color: #888; }
+    .mermaid-wrap { background: #fff; border-radius: 12px; padding: 20px; border: 1px solid #eee; overflow-x: auto; }
+
+    /* ─────── SLIDE 8 DIRECTORY ─────── */
+    #s8 { background: #0d0d1c; }
+    .dir-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 8px; }
+    .dir-tree {
+      background: #0a0a15; border-radius: 12px;
+      padding: 24px; border: 1px solid #1a1a30;
+      font-family: 'Source Code Pro', monospace;
+      font-size: 13px; line-height: 1.9;
+    }
+    .dir-tree .d { color: #4a90d9; font-weight: bold; }
+    .dir-tree .f { color: #bbbbcc; }
+    .dir-tree .c { color: #555570; font-size: 11px; }
+    .layer-desc { display: flex; flex-direction: column; gap: 14px; }
+    .layer-card {
+      background: var(--card); border-radius: 10px; padding: 16px 20px;
+      border-left: 4px solid;
+    }
+    .layer-title { font-size: 14px; font-weight: bold; margin-bottom: 4px; }
+    .layer-text  { font-size: 13px; color: var(--lgray); }
+
+    /* ─────── SLIDE 9 IMPLEMENTATION ─────── */
+    #s9 { background: var(--bg); }
+    .impl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 8px; }
+    .impl-card {
+      background: var(--card); border-radius: 14px; padding: 22px;
+      border: 1px solid #1e1e3a;
+    }
+    .impl-icon { font-size: 26px; margin-bottom: 10px; }
+    .impl-title { font-size: 15px; font-weight: bold; margin-bottom: 8px; }
+    .impl-list { list-style: none; }
+    .impl-list li {
+      font-size: 13px; color: var(--lgray); line-height: 1.7;
+      padding-left: 14px; position: relative;
+    }
+    .impl-list li::before {
+      content: '→'; position: absolute; left: 0; color: var(--blue);
+    }
+    .code-chip {
+      display: inline-block; background: #1a1a2e;
+      border: 1px solid #2a2a44; border-radius: 4px;
+      padding: 1px 7px; font-family: 'Source Code Pro', monospace;
+      font-size: 11px; color: #8ab8e8; margin: 2px;
+    }
+
+    /* ─────── SLIDE 10 TRIALS ─────── */
+    #s10 { background: #0a0a18; }
+    .trial-list { display: flex; flex-direction: column; gap: 16px; margin-top: 8px; }
+    .trial-card {
+      background: var(--card); border-radius: 12px; padding: 20px 24px;
+      display: grid; grid-template-columns: auto 1fr auto;
+      align-items: center; gap: 20px;
+      border: 1px solid #1e1e3a;
+    }
+    .trial-num { font-family: 'Jua', sans-serif; font-size: 28px; color: #2a2a44; }
+    .trial-prob { font-size: 13px; color: var(--red); font-weight: bold; margin-bottom: 4px; }
+    .trial-sol  { font-size: 13px; color: var(--lgray); }
+    .trial-badge {
+      padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: bold;
+      white-space: nowrap;
+    }
+    .trial-resolved { background: rgba(39,174,96,.15); color: #2ecc71; border: 1px solid rgba(39,174,96,.3); }
+
+    /* ─────── SLIDE 11 PERF & QUALITY ─────── */
+    #s11 { background: var(--bg); }
+    .pq-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 8px; }
+    .pq-section h4 { font-size: 14px; font-weight: bold; color: var(--blue); margin-bottom: 14px; letter-spacing: 1px; }
+    .pq-item {
+      display: flex; gap: 12px; align-items: flex-start;
+      margin-bottom: 14px; padding: 14px; background: var(--card);
+      border-radius: 10px; border: 1px solid #1e1e3a;
+    }
+    .pq-item-icon { font-size: 18px; flex-shrink: 0; }
+    .pq-item-title { font-size: 13px; font-weight: bold; margin-bottom: 3px; }
+    .pq-item-desc  { font-size: 12px; color: var(--lgray); line-height: 1.6; }
+
+    /* ─────── SLIDE 12 DEV ENV ─────── */
+    #s12 { background: #0d0d1c; }
+    .env-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 8px; }
+    .env-card { background: var(--card); border-radius: 14px; padding: 24px; border: 1px solid #1e1e3a; }
+    .env-title { font-size: 13px; font-weight: bold; color: var(--blue); margin-bottom: 14px; letter-spacing: 1px; }
+    .env-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #1a1a30; }
+    .env-row:last-child { border-bottom: none; }
+    .env-key   { font-size: 13px; color: var(--lgray); }
+    .env-val   { font-size: 13px; font-family: 'Source Code Pro', monospace; color: #8ab8e8; }
+    .cmd-block {
+      background: #0a0a15; border-radius: 10px; padding: 18px;
+      font-family: 'Source Code Pro', monospace; font-size: 13px;
+      line-height: 2; border: 1px solid #1a1a30;
+    }
+    .cmd-block .prompt { color: var(--green); }
+    .cmd-block .cmd    { color: #fff; }
+    .cmd-block .comment{ color: #444466; }
+
+    /* ─────── SLIDE 13 BUILD DEPLOY ─────── */
+    #s13 { background: var(--bg); }
+    .build-flow { display: flex; align-items: center; gap: 0; margin: 20px 0 32px; flex-wrap: wrap; }
+    .build-step {
+      background: var(--card); border-radius: 10px; padding: 14px 20px;
+      border: 1px solid #1e1e3a; min-width: 130px; text-align: center;
+    }
+    .build-step-icon { font-size: 20px; margin-bottom: 6px; }
+    .build-step-name { font-size: 12px; font-weight: bold; }
+    .build-step-sub  { font-size: 11px; color: var(--lgray); margin-top: 3px; }
+    .build-arrow { font-size: 20px; color: var(--blue); padding: 0 10px; }
+    .deploy-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .deploy-table th {
+      text-align: left; padding: 10px 14px;
+      background: #1a1a2e; color: var(--lgray); font-weight: 500;
+      border-bottom: 1px solid #2a2a44;
+    }
+    .deploy-table td {
+      padding: 10px 14px; border-bottom: 1px solid #1a1a2e;
+      color: var(--lgray);
+    }
+    .deploy-table td:first-child { color: #fff; font-weight: bold; }
+    .deploy-table td code { font-family: 'Source Code Pro', monospace; color: #8ab8e8; font-size: 12px; }
+
+    /* ─────── SLIDE 14 TEST ─────── */
+    #s14 { background: #0a0a18; }
+    .test-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin-top: 8px; }
+    .test-section-title {
+      font-size: 13px; font-weight: bold; color: var(--blue);
+      margin-bottom: 14px; letter-spacing: 1px;
+      padding-bottom: 8px; border-bottom: 1px solid #1e1e3a;
+    }
+    .test-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      margin-bottom: 12px; padding: 12px; background: var(--card);
+      border-radius: 8px; border: 1px solid #1e1e3a;
+    }
+    .test-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+    .test-name { font-size: 13px; font-weight: bold; margin-bottom: 2px; }
+    .test-desc { font-size: 12px; color: var(--lgray); }
+    .test-result { font-size: 11px; color: #2ecc71; margin-top: 3px; font-weight: bold; }
+
+    /* ─────── SLIDE 15 ADR ─────── */
+    #s15 { background: var(--bg); }
+    .adr-list { display: flex; flex-direction: column; gap: 18px; margin-top: 8px; }
+    .adr-card { background: var(--card); border-radius: 14px; padding: 22px 26px; border: 1px solid #1e1e3a; }
+    .adr-header { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+    .adr-num { font-family: 'Source Code Pro', monospace; font-size: 12px; color: var(--blue); background: rgba(74,144,217,.1); border: 1px solid rgba(74,144,217,.3); border-radius: 6px; padding: 3px 10px; }
+    .adr-title { font-size: 15px; font-weight: bold; }
+    .adr-badge { margin-left: auto; }
+    .badge-accepted { background: rgba(39,174,96,.15); color: #2ecc71; border: 1px solid rgba(39,174,96,.3); border-radius: 20px; font-size: 11px; padding: 3px 12px; }
+    .adr-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; font-size: 13px; }
+    .adr-section-title { font-size: 11px; color: var(--lgray); margin-bottom: 4px; font-weight: bold; letter-spacing: 1px; }
+    .adr-text { color: #ccc; line-height: 1.7; }
+
+    /* ─────── SLIDE 16 INSTALL ─────── */
+    #s16 { background: #0d0d1c; }
+    .install-steps { display: flex; flex-direction: column; gap: 14px; margin-top: 8px; }
+    .install-step { display: flex; gap: 20px; align-items: flex-start; }
+    .install-num {
+      width: 32px; height: 32px; flex-shrink: 0;
+      background: var(--blue); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: bold;
+    }
+    .install-content { flex: 1; }
+    .install-title { font-size: 14px; font-weight: bold; margin-bottom: 6px; }
+    .install-cmd {
+      background: #0a0a15; border-radius: 8px; padding: 12px 16px;
+      font-family: 'Source Code Pro', monospace; font-size: 13px;
+      color: #8ab8e8; border: 1px solid #1a1a30; line-height: 1.8;
+    }
+    .install-note { font-size: 12px; color: var(--lgray); margin-top: 5px; }
+
+    /* ─────── SLIDE 17 SCREENS ─────── */
+    #s17 { background: var(--bg); }
+    .screens-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; margin-top: 20px; }
+    .screen-item { text-align: center; }
+    .screen-label { font-size: 12px; color: var(--blue); font-weight: bold; margin-bottom: 10px; letter-spacing: 1px; }
+    .screen-img { width: 100%; border-radius: 14px; box-shadow: 0 8px 40px rgba(0,0,0,.6); }
+    .screen-placeholder {
+      aspect-ratio: 9/16; background: var(--card); border-radius: 14px;
+      border: 2px dashed #2a2a44; display: flex; align-items: center;
+      justify-content: center; flex-direction: column; gap: 8px; color: var(--dgray);
+      font-size: 13px;
+    }
+
+    /* ─────── SLIDE 18 USAGE ─────── */
+    #s18 { background: #0a0a18; }
+    .usage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 8px; }
+    .scenario-steps { display: flex; flex-direction: column; gap: 10px; }
+    .scenario-step {
+      display: flex; gap: 14px; align-items: flex-start;
+      background: var(--card); border-radius: 10px; padding: 14px;
+      border: 1px solid #1e1e3a;
+    }
+    .scenario-num {
+      width: 28px; height: 28px; flex-shrink: 0;
+      background: var(--blue); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: bold;
+    }
+    .scenario-text { font-size: 13px; color: var(--lgray); line-height: 1.6; }
+    .scenario-text strong { color: #fff; display: block; margin-bottom: 2px; }
+    .effect-list { display: flex; flex-direction: column; gap: 14px; }
+    .effect-item {
+      background: var(--card); border-radius: 10px; padding: 16px;
+      border-left: 4px solid; border-top: none; border-right: none; border-bottom: none;
+    }
+    .effect-title { font-size: 14px; font-weight: bold; margin-bottom: 4px; }
+    .effect-desc  { font-size: 13px; color: var(--lgray); line-height: 1.6; }
+
+    /* ─────── SLIDE 19 CLOSING ─────── */
+    #s19 { background: var(--bg); border-left: 6px solid var(--purp); }
+    #s19 h2 { font-family: 'Jua', sans-serif; font-size: clamp(28px, 5vw, 52px); line-height: 1.3; margin-bottom: 20px; }
+    .future-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 28px; }
+    .future-card { background: var(--card); border-radius: 12px; padding: 20px; border: 1px solid #1e1e3a; }
+    .future-icon  { font-size: 24px; margin-bottom: 10px; }
+    .future-title { font-size: 14px; font-weight: bold; margin-bottom: 6px; }
+    .future-desc  { font-size: 13px; color: var(--lgray); line-height: 1.7; }
+    .closing-msg { font-size: clamp(13px, 1.8vw, 16px); color: var(--lgray); line-height: 2; margin-top: 20px; }
+
+    /* ─────── RESPONSIVE ─────── */
+    @media (max-width: 900px) {
       section { padding: 80px 24px 40px; }
-      .problem-grid { grid-template-columns: 1fr; }
-      .wbs-grid { grid-template-columns: repeat(3, 1fr); }
+      .problem-grid, .dir-grid, .env-grid, .pq-grid, .test-grid,
+      .usage-grid, .impl-grid, .tech-grid, .future-grid { grid-template-columns: 1fr; }
+      .wbs-grid { grid-template-columns: repeat(3,1fr); }
+      .adr-grid { grid-template-columns: 1fr; }
+      .screens-grid { grid-template-columns: 1fr 1fr; }
+      .build-flow { justify-content: center; }
     }
     @media (max-width: 560px) {
-      .wbs-grid { grid-template-columns: repeat(2, 1fr); }
+      .wbs-grid { grid-template-columns: repeat(2,1fr); }
       .stats-row { flex-direction: column; }
+      .screens-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-<!-- ════════════════════ 슬라이드 1: 타이틀 ════════════════════ -->
-<section id="slide-title">
+<nav>
+  <a href="#s1">타이틀</a>
+  <a href="#s2">비전</a>
+  <a href="#s3">문제정의</a>
+  <a href="#s4">WBS</a>
+  <a href="#s5">진행과정</a>
+  <a href="#s6">기술스택</a>
+  <a href="#s7">아키텍처</a>
+  <a href="#s8">앱구조</a>
+  <a href="#s9">구현방법</a>
+  <a href="#s10">시행착오</a>
+  <a href="#s11">품질관리</a>
+  <a href="#s12">개발환경</a>
+  <a href="#s13">빌드&배포</a>
+  <a href="#s14">테스트</a>
+  <a href="#s15">ADR</a>
+  <a href="#s16">설치가이드</a>
+  <a href="#s17">앱화면</a>
+  <a href="#s18">활용방안</a>
+  <a href="#s19">마무리</a>
+</nav>
+
+<!-- ══════════ S1 TITLE ══════════ -->
+<section id="s1">
   <div class="section-label">APP PRESENTATION · 2026</div>
   <h1>커브터디</h1>
   <div class="en">curvetudy</div>
@@ -266,23 +499,47 @@
     망각곡선 이론 기반 &nbsp;·&nbsp; 복습 타이밍 자동 추천 앱<br>
     에빙하우스의 망각곡선을 활용해 최적의 복습 시점을 알려주는 모바일 앱
   </p>
-  <p class="stack">React Native (Expo) &nbsp;·&nbsp; Firebase &nbsp;·&nbsp; Claude API</p>
-  <p class="date">2026. 05</p>
+  <p class="stack">React Native (Expo) &nbsp;·&nbsp; TypeScript &nbsp;·&nbsp; Firebase &nbsp;·&nbsp; AI 퀴즈 생성</p>
+  <p class="meta">2026. 06 &nbsp;·&nbsp; 기말 발표</p>
 </section>
 
-<!-- ════════════════════ 슬라이드 2: 문제 정의 & 비전 ════════════════════ -->
-<section id="slide-problem">
-  <div class="section-label">PROBLEM → SOLUTION</div>
-  <div class="problem-grid">
+<!-- ══════════ S2 VISION ══════════ -->
+<section id="s2">
+  <div class="section-num">01 VISION</div>
+  <h2 class="slide-title">비전</h2>
+  <p class="slide-sub">커브터디가 만들고자 하는 세상</p>
+  <div class="vision-box">
+    <div class="vision-quote">
+      "공부한 내용을<br>오래 기억할 수 있도록<br>도와주는 앱"
+    </div>
+    <p class="vision-desc">
+      열심히 공부했는데 시험 날 기억이 안 난다는 경험, 누구나 한 번쯤 있을 거예요.<br>
+      커브터디는 과학적으로 입증된 <strong>에빙하우스 망각곡선 이론</strong>을 활용해<br>
+      사용자가 적시에 복습할 수 있도록 자동으로 알려주고,<br>
+      AI가 생성한 퀴즈로 스스로 점검까지 할 수 있는 스마트 복습 앱입니다.
+    </p>
+    <div class="vision-keywords">
+      <div class="vision-kw">⏰ 최적의 복습 타이밍</div>
+      <div class="vision-kw">🤖 AI 퀴즈 자동 생성</div>
+      <div class="vision-kw">📊 복습 스트릭 추적</div>
+      <div class="vision-kw">📅 캘린더 시각화</div>
+    </div>
+  </div>
+</section>
 
-    <!-- 왼쪽: 문제 -->
+<!-- ══════════ S3 PROBLEM ══════════ -->
+<section id="s3">
+  <div class="section-num">02 PROBLEM → SOLUTION</div>
+  <h2 class="slide-title">왜 만들었나요?</h2>
+  <div class="problem-grid">
     <div class="problem-left">
-      <div style="font-size:12px;color:var(--red);font-weight:bold;margin-bottom:10px;">문제 정의</div>
-      <h2>왜 우리는<br>공부해도 잊을까?</h2>
+      <div style="font-size:11px;color:var(--red);font-weight:bold;letter-spacing:1px;margin-bottom:10px;">문제 정의</div>
+      <h3>왜 우리는<br>공부해도 잊을까?</h3>
       <p>
         에빙하우스(Ebbinghaus, 1885)의 연구에 따르면<br>
-        사람은 학습 후 시간이 지날수록 기억이 급격히 감소합니다.<br>
-        반복 복습 없이는 장기 기억으로 이어지지 않습니다.
+        사람은 학습 직후부터 기억이 급격히 감소합니다.<br>
+        반복 복습 없이는 장기 기억으로 이어지지 않고,<br>
+        <strong style="color:#fff;">학생들은 언제 복습해야 할지조차 모릅니다.</strong>
       </p>
       <div class="stats-row">
         <div class="stat-card">
@@ -302,224 +559,759 @@
         </div>
       </div>
     </div>
-
-    <!-- 오른쪽: 해결 -->
     <div class="solution-box">
-      <div style="font-size:12px;color:var(--blue);font-weight:bold;margin-bottom:8px;">해결책</div>
-      <h3>커브터디</h3>
+      <div style="font-size:11px;color:var(--blue);font-weight:bold;letter-spacing:1px;margin-bottom:8px;">해결책</div>
+      <h4>커브터디</h4>
       <div class="sol-item">
         <div class="sol-icon">📝</div>
-        <div>
-          <div class="sol-title">노트 작성</div>
-          <div class="sol-desc">공부한 내용을 노트로 기록</div>
-        </div>
+        <div><div class="sol-title">노트 작성</div><div class="sol-desc">공부한 내용을 과목별로 노트로 기록</div></div>
       </div>
       <div class="sol-item">
         <div class="sol-icon">⏰</div>
-        <div>
-          <div class="sol-title">자동 계산</div>
-          <div class="sol-desc">망각곡선 기반 최적 복습 시점 계산</div>
-        </div>
+        <div><div class="sol-title">자동 복습일 계산</div><div class="sol-desc">망각곡선 기반 다음 복습 시점 자동 계산</div></div>
       </div>
       <div class="sol-item">
         <div class="sol-icon">🤖</div>
-        <div>
-          <div class="sol-title">AI 문제 생성</div>
-          <div class="sol-desc">Claude API로 노트 기반 퀴즈 자동 생성</div>
-        </div>
+        <div><div class="sol-title">AI 퀴즈 생성</div><div class="sol-desc">노트 내용 기반 객관식 문제 자동 생성</div></div>
       </div>
       <div class="sol-item">
-        <div class="sol-icon">✅</div>
-        <div>
-          <div class="sol-title">자가 체크</div>
-          <div class="sol-desc">잘됨 → 3일 후 &nbsp;/&nbsp; 안됨 → 1일 후</div>
-        </div>
+        <div class="sol-icon">🔥</div>
+        <div><div class="sol-title">스트릭 추적</div><div class="sol-desc">연속 복습 일수 기록으로 동기 부여</div></div>
       </div>
     </div>
-
   </div>
 </section>
 
-<!-- ════════════════════ 슬라이드 3: WBS ════════════════════ -->
-<section id="slide-wbs">
-  <div class="section-label">WBS</div>
-  <h2>프로젝트 작업 분류</h2>
-  <p class="wbs-sub">Work Breakdown Structure &nbsp;|&nbsp; 커브터디 전체 개발 현황</p>
+<!-- ══════════ S4 WBS ══════════ -->
+<section id="s4">
+  <div class="section-num" style="color:var(--blue);">03 WBS</div>
+  <h2 class="slide-title">프로젝트 작업 분류</h2>
+  <p class="slide-sub">Work Breakdown Structure — 전체 개발 현황</p>
 
   <div class="legend">
-    <div class="legend-item"><div class="legend-dot" style="background:#27ae60"></div>완료</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#f39c12"></div>진행 중</div>
-    <div class="legend-item"><div class="legend-dot" style="background:#ccc"></div>예정</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#27ae60;"></div>완료</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f39c12;"></div>진행 중</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ccc;"></div>예정</div>
   </div>
 
   <div class="wbs-grid">
-
-    <!-- 기획 -->
     <div class="wbs-col">
       <div class="wbs-header" style="background:#4a90d9;">기획</div>
-      <div class="wbs-item">
-        <div class="item-bar" style="background:#4a90d9;"></div>
-        <div class="item-code">1.1</div>
-        <div class="item-name">앱 기획 (ARD 작성)</div>
-        <span class="wbs-badge badge-done">✅ 완료</span>
-      </div>
-      <div class="wbs-item">
-        <div class="item-bar" style="background:#4a90d9;"></div>
-        <div class="item-code">1.2</div>
-        <div class="item-name">기술 스택 선택</div>
-        <span class="wbs-badge badge-done">✅ 완료</span>
-      </div>
+      <div class="wbs-item"><div class="item-bar" style="background:#4a90d9;"></div><div class="item-code">1.1</div><div class="item-name">앱 기획 / ADR 작성</div><span class="wbs-badge badge-done">✅ 완료</span></div>
+      <div class="wbs-item"><div class="item-bar" style="background:#4a90d9;"></div><div class="item-code">1.2</div><div class="item-name">기술 스택 선택</div><span class="wbs-badge badge-done">✅ 완료</span></div>
+      <div class="wbs-item"><div class="item-bar" style="background:#4a90d9;"></div><div class="item-code">1.3</div><div class="item-name">WBS 수립</div><span class="wbs-badge badge-done">✅ 완료</span></div>
     </div>
-
-    <!-- 설계 -->
     <div class="wbs-col">
       <div class="wbs-header" style="background:#9b59b6;">설계</div>
-      <div class="wbs-item">
-        <div class="item-bar" style="background:#9b59b6;"></div>
-        <div class="item-code">2.1</div>
-        <div class="item-name">시스템 아키텍처</div>
-        <span class="wbs-badge badge-done">✅ 완료</span>
-      </div>
-      <div class="wbs-item">
-        <div class="item-bar" style="background:#9b59b6;"></div>
-        <div class="item-code">2.2</div>
-        <div class="item-name">DB 스키마 설계</div>
-        <span class="wbs-badge badge-done">✅ 완료</span>
-      </div>
-      <div class="wbs-item">
-        <div class="item-bar" style="background:#9b59b6;"></div>
-        <div class="item-code">2.3</div>
-        <div class="item-name">화면(UI) 설계</div>
-        <span class="wbs-badge badge-done">✅ 완료</span>
-      </div>
+      <div class="wbs-item"><div class="item-bar" style="background:#9b59b6;"></div><div class="item-code">2.1</div><div class="item-name">시스템 아키텍처</div><span class="wbs-badge badge-done">✅ 완료</span></div>
+      <div class="wbs-item"><div class="item-bar" style="background:#9b59b6;"></div><div class="item-code">2.2</div><div class="item-name">DB 스키마 설계</div><span class="wbs-badge badge-done">✅ 완료</span></div>
+      <div class="wbs-item"><div class="item-bar" style="background:#9b59b6;"></div><div class="item-code">2.3</div><div class="item-name">화면(UI) 설계</div><span class="wbs-badge badge-done">✅ 완료</span></div>
     </div>
-
-    <!-- 개발 -->
     <div class="wbs-col">
       <div class="wbs-header" style="background:#27ae60;">개발</div>
-      <div class="wbs-item">
-        <div class="item-bar" style="background:#27ae60;"></div>
-        <div class="item-code">3.1</div>
-        <div class="item-name">프로젝트 세팅</div>
-        <span class="wbs-badge badge-done">✅ 완료</span>
-      </div>
-      <div class="wbs-item">
-        <div class="item-bar" style="background:#27ae60;"></div>
-        <div class="item-code">3.2</div>
-        <div class="item-name">인증 (로그인/회원가입)</div>
-        <span class="wbs-badge badge-done">✅ 완료</span>
-      </div>
-      <div class="wbs-item">
-        <div class="item-bar" style="background:#27ae60;"></div>
-        <div class="item-code">3.3</div>
-        <div class="item-name">핵심 기능 (노트·복습)</div>
-        <span class="wbs-badge badge-wip">🔄 진행 중</span>
-      </div>
-      <div class="wbs-item">
-        <div class="item-bar" style="background:#27ae60;"></div>
-        <div class="item-code">3.4</div>
-        <div class="item-name">캘린더 + 스트릭</div>
-        <span class="wbs-badge badge-todo">⬜ 예정</span>
-      </div>
-      <div class="wbs-item">
-        <div class="item-bar" style="background:#27ae60;"></div>
-        <div class="item-code">3.5</div>
-        <div class="item-name">Claude API 연동</div>
-        <span class="wbs-badge badge-todo">⬜ 예정</span>
-      </div>
-      <div class="wbs-item">
-        <div class="item-bar" style="background:#27ae60;"></div>
-        <div class="item-code">3.6</div>
-        <div class="item-name">UI 마무리·설정</div>
-        <span class="wbs-badge badge-todo">⬜ 예정</span>
-      </div>
+      <div class="wbs-item"><div class="item-bar" style="background:#27ae60;"></div><div class="item-code">3.1</div><div class="item-name">프로젝트 세팅</div><span class="wbs-badge badge-done">✅ 완료</span></div>
+      <div class="wbs-item"><div class="item-bar" style="background:#27ae60;"></div><div class="item-code">3.2</div><div class="item-name">인증 (로그인/회원가입)</div><span class="wbs-badge badge-done">✅ 완료</span></div>
+      <div class="wbs-item"><div class="item-bar" style="background:#27ae60;"></div><div class="item-code">3.3</div><div class="item-name">노트 작성 / 복습일 계산</div><span class="wbs-badge badge-done">✅ 완료</span></div>
+      <div class="wbs-item"><div class="item-bar" style="background:#27ae60;"></div><div class="item-code">3.4</div><div class="item-name">캘린더 + 스트릭</div><span class="wbs-badge badge-done">✅ 완료</span></div>
+      <div class="wbs-item"><div class="item-bar" style="background:#27ae60;"></div><div class="item-code">3.5</div><div class="item-name">AI 퀴즈 생성</div><span class="wbs-badge badge-done">✅ 완료</span></div>
+      <div class="wbs-item"><div class="item-bar" style="background:#27ae60;"></div><div class="item-code">3.6</div><div class="item-name">UI 마무리 / 설정화면</div><span class="wbs-badge badge-done">✅ 완료</span></div>
     </div>
-
-    <!-- 테스트 -->
     <div class="wbs-col">
       <div class="wbs-header" style="background:#e67e22;">테스트</div>
-      <div class="wbs-item">
-        <div class="item-bar" style="background:#e67e22;"></div>
-        <div class="item-code">4.1</div>
-        <div class="item-name">기능 테스트</div>
-        <span class="wbs-badge badge-todo">⬜ 예정</span>
-      </div>
-      <div class="wbs-item">
-        <div class="item-bar" style="background:#e67e22;"></div>
-        <div class="item-code">4.2</div>
-        <div class="item-name">UI/UX 테스트</div>
-        <span class="wbs-badge badge-todo">⬜ 예정</span>
-      </div>
+      <div class="wbs-item"><div class="item-bar" style="background:#e67e22;"></div><div class="item-code">4.1</div><div class="item-name">기능 테스트</div><span class="wbs-badge badge-done">✅ 완료</span></div>
+      <div class="wbs-item"><div class="item-bar" style="background:#e67e22;"></div><div class="item-code">4.2</div><div class="item-name">UI/UX 테스트</div><span class="wbs-badge badge-done">✅ 완료</span></div>
+      <div class="wbs-item"><div class="item-bar" style="background:#e67e22;"></div><div class="item-code">4.3</div><div class="item-name">통합 테스트</div><span class="wbs-badge badge-done">✅ 완료</span></div>
     </div>
-
-    <!-- 배포 -->
     <div class="wbs-col">
       <div class="wbs-header" style="background:#e74c3c;">배포</div>
-      <div class="wbs-item">
-        <div class="item-bar" style="background:#e74c3c;"></div>
-        <div class="item-code">5.1</div>
-        <div class="item-name">앱 배포</div>
-        <span class="wbs-badge badge-todo">⬜ 예정</span>
-      </div>
+      <div class="wbs-item"><div class="item-bar" style="background:#e74c3c;"></div><div class="item-code">5.1</div><div class="item-name">GitHub Pages 배포</div><span class="wbs-badge badge-done">✅ 완료</span></div>
+      <div class="wbs-item"><div class="item-bar" style="background:#e74c3c;"></div><div class="item-code">5.2</div><div class="item-name">앱 스토어 배포</div><span class="wbs-badge badge-wip">🔄 진행 중</span></div>
     </div>
-
   </div>
 </section>
 
-<!-- ════════════════════ 슬라이드 4: 아키텍처 ════════════════════ -->
-<section id="slide-arch">
-  <div class="section-label">ARCHITECTURE</div>
-  <h2>시스템 아키텍처</h2>
-  <p class="arch-sub">Expo React Native &nbsp;·&nbsp; Firebase &nbsp;·&nbsp; Claude API 연동 구조</p>
+<!-- ══════════ S5 PROGRESS ══════════ -->
+<section id="s5">
+  <div class="section-num">04 PROGRESS</div>
+  <h2 class="slide-title">프로젝트 진행 과정</h2>
+  <p class="slide-sub">단계별 개발 흐름</p>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:#4a90d9;color:#4a90d9;">📋</div>
+      <div class="tl-content">
+        <div class="tl-phase">PHASE 1 — 기획 & 설계</div>
+        <div class="tl-title">아이디어 → 구조 설계</div>
+        <div class="tl-items">망각곡선 개념 정리 · ADR 작성 · Firebase 프로젝트 생성 · Expo 프로젝트 초기 세팅 · Firestore 스키마 확정</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:#27ae60;color:#27ae60;">🔐</div>
+      <div class="tl-content">
+        <div class="tl-phase">PHASE 2 — 인증 시스템</div>
+        <div class="tl-title">로그인 / 회원가입 / 비밀번호 재설정</div>
+        <div class="tl-items">Firebase Auth 연동 · 이메일 인증 흐름 구현 · 저장 계정 전환 기능 · Expo Router 인증 분기</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:#9b59b6;color:#9b59b6;">📝</div>
+      <div class="tl-content">
+        <div class="tl-phase">PHASE 3 — 핵심 기능</div>
+        <div class="tl-title">노트 CRUD + 복습일 자동 계산</div>
+        <div class="tl-items">노트 작성/삭제 · 과목색상 태그 · 망각곡선 기반 다음 복습일 계산 (1→2→4→7→15일) · 홈 오늘/내일 섹션 · 전체 목록</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:#e67e22;color:#e67e22;">🤖</div>
+      <div class="tl-content">
+        <div class="tl-phase">PHASE 4 — AI 퀴즈</div>
+        <div class="tl-title">노트 기반 객관식 퀴즈 자동 생성</div>
+        <div class="tl-items">문장 분석 → 핵심어 추출 → 빈칸 문제 생성 · 동사/명사 구분 오답 생성 · 점수 기반 다음 복습일 조정 · 상세 채점 결과 화면</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot" style="border-color:#e74c3c;color:#e74c3c;">📅</div>
+      <div class="tl-content">
+        <div class="tl-phase">PHASE 5 — 부가 기능 완성</div>
+        <div class="tl-title">캘린더 · 스트릭 · UI 마무리</div>
+        <div class="tl-items">react-native-calendars 연동 · 날짜별 복습 노트 시각화 · 연속 복습 스트릭 계산 · 설정 화면 · GitHub Pages 배포</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ S6 TECH ══════════ -->
+<section id="s6">
+  <div class="section-num">05 TECH STACK</div>
+  <h2 class="slide-title">적용 기술 스택</h2>
+  <p class="slide-sub">선택 이유와 역할</p>
+  <div class="tech-grid">
+    <div class="tech-card">
+      <div class="tech-icon">⚛️</div>
+      <div class="tech-name">React Native + Expo</div>
+      <div class="tech-desc">iOS / Android / Web을 하나의 코드베이스로 개발. Expo Router로 파일 기반 네비게이션 구현.</div>
+      <div class="tech-why">→ 단일 코드로 크로스플랫폼 지원, 빠른 개발 주기</div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">🔷</div>
+      <div class="tech-name">TypeScript</div>
+      <div class="tech-desc">Note 타입 정의, 서비스 함수 반환 타입 명시. 컴파일 단계에서 오류를 잡아 런타임 오류 최소화.</div>
+      <div class="tech-why">→ 타입 안정성으로 코드 품질 향상</div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">🔥</div>
+      <div class="tech-name">Firebase</div>
+      <div class="tech-desc">Auth로 이메일 인증 관리, Firestore로 노트 데이터 저장. 서버 없이 백엔드 기능 제공.</div>
+      <div class="tech-why">→ 서버리스 아키텍처, 빠른 프로토타이핑</div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">🤖</div>
+      <div class="tech-name">AI 퀴즈 엔진 (자체 구현)</div>
+      <div class="tech-desc">문장 분리 → 핵심어 추출 → 동사/명사 판별 → 빈칸 문제 + 동형 오답 생성. 외부 API 없이 오프라인 동작.</div>
+      <div class="tech-why">→ API 비용 없이 안정적 퀴즈 제공</div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">📦</div>
+      <div class="tech-name">AsyncStorage</div>
+      <div class="tech-desc">스트릭 날짜/횟수, NEW 뱃지 상태를 로컬에 저장. Firebase 호출 없이 빠른 UI 업데이트.</div>
+      <div class="tech-why">→ 로컬 캐싱으로 성능 최적화</div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">📅</div>
+      <div class="tech-name">react-native-calendars</div>
+      <div class="tech-desc">캘린더 UI 라이브러리. multi-dot 마킹으로 날짜별 복습 예정 노트를 과목 색상으로 시각화.</div>
+      <div class="tech-why">→ 복습 일정 한눈에 파악 가능</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ S7 ARCH ══════════ -->
+<section id="s7">
+  <div class="section-num" style="background:var(--blue);color:#fff;">06 ARCHITECTURE</div>
+  <h2 class="slide-title">시스템 아키텍처</h2>
+  <p class="slide-sub">Expo React Native · Firebase · 레이어 구조</p>
   <div class="mermaid-wrap">
     <div class="mermaid">
 graph TB
-    subgraph FE["Expo React Native - 프론트엔드"]
-        Router["Expo Router"]
+    subgraph FE["Expo React Native — 프론트엔드"]
+        Router["Expo Router (파일 기반 라우팅)"]
         subgraph Screens["화면 app/"]
-            Auth["auth\nlogin · signup · forgot-password"]
-            Tabs["tabs\n홈 · 캘린더 · 설정"]
-            Note["note\ncreate · list · detail · self-check"]
+            Auth["(auth)/\nlogin · signup · forgot-password"]
+            Tabs["(tabs)/\n홈 · 캘린더 · 설정"]
+            Note["note/\ncreate · list · [id] · quiz"]
         end
-        subgraph Logic["로직"]
-            Utils["utils - 망각곡선 계산"]
-            Types["types - TypeScript 타입"]
-        end
+        AsyncSt["AsyncStorage\n스트릭 · NEW뱃지"]
     end
     subgraph SVC["서비스 레이어 services/"]
-        AuthSvc["auth.ts\nsignIn · signUp · logOut · resetPassword"]
-        NotesSvc["notes.ts\ncreateNote · getNotes · deleteNote"]
-        FB["firebase.ts - 초기화"]
+        AuthSvc["auth.ts\nsignIn · signUp · logOut"]
+        NotesSvc["notes.ts\ncreateNote · getNotes · deleteNote\ngetNoteById · updateNextReviewDate"]
+        FB["firebase.ts"]
     end
-    subgraph Cloud["외부 서비스"]
-        FBAuth["Firebase Auth\n이메일 인증 + 비밀번호 재설정"]
-        FSStore["Firestore DB\nnotes · reviews"]
-        Claude["Claude API\nAI 문제 생성 (예정)"]
+    subgraph Cloud["Firebase (BaaS)"]
+        FBAuth["Firebase Auth\n이메일 인증"]
+        FSStore["Firestore\nnotes 컬렉션"]
     end
     Router --> Auth & Tabs & Note
     Auth --> AuthSvc
     Note --> NotesSvc
+    Tabs --> NotesSvc
     AuthSvc & NotesSvc --> FB
     FB --> FBAuth & FSStore
-    Note -.->|"예정"| Claude
+    Note --> AsyncSt
+    Tabs --> AsyncSt
     </div>
   </div>
 </section>
 
-<!-- ════════════════════ 슬라이드 5: 앱 화면 ════════════════════ -->
-<section id="slide-screens" style="background:#0f0f1a;">
-  <div class="section-label">APP SCREENS</div>
-  <h2 style="font-family:'Jua',sans-serif;font-size:clamp(22px,3vw,30px);color:#fff;margin-bottom:6px;">현재 구현 화면 일부</h2>
-  <p style="font-size:13px;color:#bbbbcc;margin-bottom:36px;">React Native Expo · 웹 브라우저에서 실행</p>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:start;">
-    <div style="text-align:center;">
-      <p style="font-size:13px;color:#4a90d9;font-weight:bold;margin-bottom:14px;letter-spacing:1px;">홈 화면</p>
-      <img src="홈화면.png" alt="홈화면" style="width:100%;max-width:480px;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,0.5);" />
+<!-- ══════════ S8 DIRECTORY ══════════ -->
+<section id="s8">
+  <div class="section-num">07 APP STRUCTURE</div>
+  <h2 class="slide-title">앱 구조 — 디렉토리</h2>
+  <p class="slide-sub">레이어별 역할 분리</p>
+  <div class="dir-grid">
+    <div class="dir-tree">
+<span class="d">forgetting-curve/</span>
+├── <span class="d">app/</span>               <span class="c"># Expo Router 화면</span>
+│   ├── <span class="d">(auth)/</span>
+│   │   ├── <span class="f">login.tsx</span>
+│   │   ├── <span class="f">signup.tsx</span>
+│   │   └── <span class="f">forgot-password.tsx</span>
+│   ├── <span class="d">(tabs)/</span>
+│   │   ├── <span class="f">index.tsx</span>      <span class="c"># 홈</span>
+│   │   ├── <span class="f">calendar.tsx</span>
+│   │   └── <span class="f">settings.tsx</span>
+│   └── <span class="d">note/</span>
+│       ├── <span class="f">create.tsx</span>
+│       ├── <span class="f">list.tsx</span>
+│       ├── <span class="f">[id].tsx</span>       <span class="c"># 동적 라우트</span>
+│       └── <span class="f">quiz.tsx</span>
+├── <span class="d">services/</span>          <span class="c"># 비즈니스 로직</span>
+│   ├── <span class="f">firebase.ts</span>
+│   ├── <span class="f">auth.ts</span>
+│   └── <span class="f">notes.ts</span>
+├── <span class="f">types/index.ts</span>     <span class="c"># TypeScript 타입</span>
+└── <span class="f">app.json</span>           <span class="c"># Expo 설정</span>
     </div>
-    <div style="text-align:center;">
-      <p style="font-size:13px;color:#4a90d9;font-weight:bold;margin-bottom:14px;letter-spacing:1px;">노트 작성 화면</p>
-      <img src="노트작성.png" alt="노트작성" style="width:100%;max-width:480px;border-radius:16px;box-shadow:0 8px 40px rgba(0,0,0,0.5);" />
+    <div class="layer-desc">
+      <div class="layer-card" style="border-color:#4a90d9;">
+        <div class="layer-title" style="color:#4a90d9;">🖥 Presentation Layer (app/)</div>
+        <div class="layer-text">화면 렌더링과 사용자 인터랙션 처리. Expo Router로 파일 경로 = URL 경로. 인증/탭/노트 3개 영역으로 분리.</div>
+      </div>
+      <div class="layer-card" style="border-color:#27ae60;">
+        <div class="layer-title" style="color:#27ae60;">⚙️ Service Layer (services/)</div>
+        <div class="layer-text">Firebase 직접 호출 로직 집중. 화면 컴포넌트는 서비스 함수만 호출 → 관심사 분리로 유지보수성 향상.</div>
+      </div>
+      <div class="layer-card" style="border-color:#9b59b6;">
+        <div class="layer-title" style="color:#9b59b6;">☁️ Cloud Layer (Firebase)</div>
+        <div class="layer-text">Auth로 사용자 인증 관리, Firestore로 notes 컬렉션 저장. 실시간 DB 대신 getDoc/getDocs로 필요 시 조회.</div>
+      </div>
+      <div class="layer-card" style="border-color:#e67e22;">
+        <div class="layer-title" style="color:#e67e22;">💾 Local Cache (AsyncStorage)</div>
+        <div class="layer-text">스트릭 날짜·횟수, NEW 뱃지 기준 타임스탬프 저장. Firebase 호출 없이 빠른 로컬 상태 유지.</div>
+      </div>
     </div>
+  </div>
+</section>
+
+<!-- ══════════ S9 IMPLEMENTATION ══════════ -->
+<section id="s9">
+  <div class="section-num">08 HOW WE BUILT IT</div>
+  <h2 class="slide-title">구현 방법</h2>
+  <p class="slide-sub">주요 기능별 구현 방식</p>
+  <div class="impl-grid">
+    <div class="impl-card">
+      <div class="impl-icon">⏰</div>
+      <div class="impl-title">망각곡선 복습일 계산</div>
+      <ul class="impl-list">
+        <li>노트 최초 작성 시 <span class="code-chip">nextReviewDate = today + 1</span></li>
+        <li>퀴즈 결과에 따라 복습일 조정<br>잘됐어요 +3일 / 보통 +2일 / 헷갈려요 +1일</li>
+        <li>반복할수록 간격이 늘어나는 간격 반복 학습 구현</li>
+      </ul>
+    </div>
+    <div class="impl-card">
+      <div class="impl-icon">🤖</div>
+      <div class="impl-title">AI 퀴즈 생성 (자체 엔진)</div>
+      <ul class="impl-list">
+        <li>노트 내용을 문장 단위로 분리</li>
+        <li>각 문장에서 가장 긴 단어 = 핵심어 추출</li>
+        <li><span class="code-chip">/다$/</span> 정규식으로 동사/명사 구분</li>
+        <li>같은 품사의 단어를 오답으로 사용 → 자연스러운 선지</li>
+        <li>최대 5문제 동적 생성 (문장 수 따라 달라짐)</li>
+      </ul>
+    </div>
+    <div class="impl-card">
+      <div class="impl-icon">🔥</div>
+      <div class="impl-title">스트릭 (연속 복습일)</div>
+      <ul class="impl-list">
+        <li>퀴즈 완료 시 AsyncStorage에 날짜 + 횟수 저장</li>
+        <li>어제 날짜면 +1, 아니면 1로 초기화</li>
+        <li>오늘 이미 완료했으면 중복 카운트 방지</li>
+        <li>홈 화면 포커스 시 AsyncStorage에서 불러와 표시</li>
+      </ul>
+    </div>
+    <div class="impl-card">
+      <div class="impl-icon">📅</div>
+      <div class="impl-title">캘린더 복습 시각화</div>
+      <ul class="impl-list">
+        <li>react-native-calendars <span class="code-chip">multi-dot</span> 마킹 방식</li>
+        <li>노트의 과목 색상 = 점 색상으로 시각 구분</li>
+        <li>날짜 클릭 시 해당 날 복습 예정 노트 목록 표시</li>
+        <li>Expo useFocusEffect로 화면 재진입 시 자동 갱신</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ S10 TRIALS ══════════ -->
+<section id="s10">
+  <div class="section-num">09 CHALLENGES</div>
+  <h2 class="slide-title">구현 시행착오</h2>
+  <p class="slide-sub">개발 과정에서 만난 문제와 해결 방법</p>
+  <div class="trial-list">
+    <div class="trial-card">
+      <div class="trial-num">01</div>
+      <div>
+        <div class="trial-prob">🚫 Anthropic API CORS 오류 — 웹 브라우저에서 API 직접 호출 불가</div>
+        <div class="trial-sol">원인: 브라우저는 외부 API에 직접 요청 불가 (보안 정책). 해결: Node.js로 로컬 CORS 프록시(proxy.js) 작성, 웹에서는 프록시 경유, 모바일에서는 직접 호출 분기 처리.</div>
+      </div>
+      <div class="trial-badge trial-resolved">해결 ✓</div>
+    </div>
+    <div class="trial-card">
+      <div class="trial-num">02</div>
+      <div>
+        <div class="trial-prob">🚫 Gemini API 할당량 0 — 학교 이메일 계정 사용 제한, 개인 Gmail도 동일</div>
+        <div class="trial-sol">원인: 학교 조직 계정의 Google Workspace 정책 + 한국 지역 무료 할당량 제한. 해결: 외부 API 의존 제거, 자체 퀴즈 생성 엔진 구현 → 오프라인에서도 동작, API 비용 0원.</div>
+      </div>
+      <div class="trial-badge trial-resolved">해결 ✓</div>
+    </div>
+    <div class="trial-card">
+      <div class="trial-num">03</div>
+      <div>
+        <div class="trial-prob">🚫 퀴즈 오답 선지 품질 불량 — 동사 답에 명사 오답, 또는 선지 4개가 모두 동일</div>
+        <div class="trial-sol">원인: 오답 풀이 단어 수 부족 + 품사 미구분. 해결: 정규식 /다$/ 으로 동사/명사 판별, 동일 품사 단어만 오답으로 사용, 부족 시 사전 정의 VERB_FALLBACKS/NOUN_FALLBACKS에서 보충.</div>
+      </div>
+      <div class="trial-badge trial-resolved">해결 ✓</div>
+    </div>
+    <div class="trial-card">
+      <div class="trial-num">04</div>
+      <div>
+        <div class="trial-prob">🚫 퀴즈 진행 오류 — 3문제짜리 노트인데 4번 문제에서 멈춤</div>
+        <div class="trial-sol">원인: handleNext가 <span class="code-chip">currentQ &lt; 4</span>로 하드코딩되어 있어 실제 문제 수와 불일치. 해결: <span class="code-chip">currentQ &lt; questions.length - 1</span>로 동적 처리.</div>
+      </div>
+      <div class="trial-badge trial-resolved">해결 ✓</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ S11 QUALITY ══════════ -->
+<section id="s11">
+  <div class="section-num">10 QUALITY</div>
+  <h2 class="slide-title">성능 최적화 & 코드 품질 관리</h2>
+  <p class="slide-sub">더 빠르고, 더 안정적으로</p>
+  <div class="pq-grid">
+    <div class="pq-section">
+      <h4>⚡ 성능 최적화</h4>
+      <div class="pq-item">
+        <div class="pq-item-icon">🎯</div>
+        <div>
+          <div class="pq-item-title">useFocusEffect 사용</div>
+          <div class="pq-item-desc">useEffect 대신 useFocusEffect로 화면 포커스 시에만 데이터 갱신. 불필요한 Firestore 호출 최소화.</div>
+        </div>
+      </div>
+      <div class="pq-item">
+        <div class="pq-item-icon">📦</div>
+        <div>
+          <div class="pq-item-title">AsyncStorage 로컬 캐싱</div>
+          <div class="pq-item-desc">스트릭, NEW 뱃지 등 자주 읽히는 상태를 로컬 저장. 홈 화면 진입 시 Firebase 요청 없이 즉시 표시.</div>
+        </div>
+      </div>
+      <div class="pq-item">
+        <div class="pq-item-icon">🔍</div>
+        <div>
+          <div class="pq-item-title">클라이언트 사이드 필터링</div>
+          <div class="pq-item-desc">홈 화면 오늘/내일 분류를 전체 노트를 한 번 가져와 클라이언트에서 필터. Firestore 인덱스 없이 복수 쿼리 회피.</div>
+        </div>
+      </div>
+    </div>
+    <div class="pq-section">
+      <h4>🛡 코드 품질 관리</h4>
+      <div class="pq-item">
+        <div class="pq-item-icon">🔷</div>
+        <div>
+          <div class="pq-item-title">TypeScript 타입 정의</div>
+          <div class="pq-item-desc">Note 인터페이스, 서비스 함수 반환 타입 명시. 컴파일 단계에서 타입 오류를 잡아 런타임 버그 예방.</div>
+        </div>
+      </div>
+      <div class="pq-item">
+        <div class="pq-item-icon">🏗</div>
+        <div>
+          <div class="pq-item-title">서비스 레이어 분리</div>
+          <div class="pq-item-desc">Firebase 로직을 services/에 집중. 화면 컴포넌트는 서비스 함수만 호출 → 테스트 용이, 유지보수성 향상.</div>
+        </div>
+      </div>
+      <div class="pq-item">
+        <div class="pq-item-icon">🔒</div>
+        <div>
+          <div class="pq-item-title">환경 변수 분리</div>
+          <div class="pq-item-desc">API 키를 .env 파일에 EXPO_PUBLIC_ 접두사로 관리. .gitignore로 커밋 방지, 민감 정보 보호.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ S12 DEV ENV ══════════ -->
+<section id="s12">
+  <div class="section-num">11 DEV ENVIRONMENT</div>
+  <h2 class="slide-title">개발 환경 설정</h2>
+  <p class="slide-sub">로컬에서 실행하기 위한 구성</p>
+  <div class="env-grid">
+    <div class="env-card">
+      <div class="env-title">개발 도구</div>
+      <div class="env-row"><span class="env-key">IDE</span><span class="env-val">VS Code</span></div>
+      <div class="env-row"><span class="env-key">Runtime</span><span class="env-val">Node.js 18+</span></div>
+      <div class="env-row"><span class="env-key">Package Manager</span><span class="env-val">npm</span></div>
+      <div class="env-row"><span class="env-key">Framework</span><span class="env-val">Expo SDK 56</span></div>
+      <div class="env-row"><span class="env-key">Language</span><span class="env-val">TypeScript 5</span></div>
+      <div class="env-row"><span class="env-key">Platform</span><span class="env-val">Windows 11</span></div>
+    </div>
+    <div class="env-card">
+      <div class="env-title">환경 변수 (.env)</div>
+      <div class="cmd-block">
+        <span class="comment"># Firebase 설정</span><br>
+        <span class="prompt">EXPO_PUBLIC_</span><span class="cmd">FIREBASE_API_KEY=...</span><br>
+        <span class="prompt">EXPO_PUBLIC_</span><span class="cmd">FIREBASE_PROJECT_ID=...</span><br>
+        <span class="comment"># AI API (선택)</span><br>
+        <span class="prompt">EXPO_PUBLIC_</span><span class="cmd">ANTHROPIC_API_KEY=...</span>
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--lgray);">
+        ⚠️ .env는 .gitignore에 포함 — 저장소에 커밋되지 않음
+      </div>
+    </div>
+    <div class="env-card" style="grid-column:1/-1;">
+      <div class="env-title">로컬 실행 명령어</div>
+      <div class="cmd-block">
+        <span class="comment"># 의존성 설치</span><br>
+        <span class="prompt">$</span> <span class="cmd">cd forgetting-curve &amp;&amp; npm install</span><br><br>
+        <span class="comment"># 개발 서버 시작 (웹 브라우저)</span><br>
+        <span class="prompt">$</span> <span class="cmd">npx expo start --web</span><br><br>
+        <span class="comment"># 모바일 (Expo Go 앱으로 QR 스캔)</span><br>
+        <span class="prompt">$</span> <span class="cmd">npx expo start</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ S13 BUILD & DEPLOY ══════════ -->
+<section id="s13">
+  <div class="section-num">12 BUILD & DEPLOY</div>
+  <h2 class="slide-title">빌드와 배포 과정</h2>
+  <p class="slide-sub">개발 → 빌드 → 배포 단계</p>
+
+  <div class="build-flow">
+    <div class="build-step">
+      <div class="build-step-icon">💻</div>
+      <div class="build-step-name">개발</div>
+      <div class="build-step-sub">expo start --web</div>
+    </div>
+    <div class="build-arrow">→</div>
+    <div class="build-step">
+      <div class="build-step-icon">🔨</div>
+      <div class="build-step-name">빌드</div>
+      <div class="build-step-sub">expo export</div>
+    </div>
+    <div class="build-arrow">→</div>
+    <div class="build-step">
+      <div class="build-step-icon">📁</div>
+      <div class="build-step-name">정적 파일</div>
+      <div class="build-step-sub">dist/ 폴더</div>
+    </div>
+    <div class="build-arrow">→</div>
+    <div class="build-step">
+      <div class="build-step-icon">🐙</div>
+      <div class="build-step-name">GitHub Push</div>
+      <div class="build-step-sub">git push</div>
+    </div>
+    <div class="build-arrow">→</div>
+    <div class="build-step">
+      <div class="build-step-icon">🌐</div>
+      <div class="build-step-name">GitHub Pages</div>
+      <div class="build-step-sub">자동 배포</div>
+    </div>
+  </div>
+
+  <table class="deploy-table">
+    <tr><th>단계</th><th>명령어 / 방법</th><th>설명</th></tr>
+    <tr><td>개발 서버</td><td><code>npx expo start --web</code></td><td>로컬 브라우저에서 핫 리로드로 실시간 확인</td></tr>
+    <tr><td>웹 빌드</td><td><code>npx expo export --platform web</code></td><td>dist/ 폴더에 HTML/JS/CSS 정적 파일 생성</td></tr>
+    <tr><td>GitHub 배포</td><td><code>git add . &amp;&amp; git commit &amp;&amp; git push</code></td><td>GitHub Pages가 루트 index.html을 자동 서빙</td></tr>
+    <tr><td>모바일 배포</td><td>EAS Build (예정)</td><td>Expo Application Services로 APK/IPA 빌드</td></tr>
+  </table>
+</section>
+
+<!-- ══════════ S14 TEST ══════════ -->
+<section id="s14">
+  <div class="section-num">13 TESTING</div>
+  <h2 class="slide-title">테스트 결과</h2>
+  <p class="slide-sub">단위 테스트 · 통합 테스트</p>
+  <div class="test-grid">
+    <div>
+      <div class="test-section-title">UNIT TEST — 단위 테스트</div>
+      <div class="test-item">
+        <div class="test-icon">🔬</div>
+        <div>
+          <div class="test-name">generateQuestions()</div>
+          <div class="test-desc">다양한 길이의 노트 입력 → 문제 수, 선지 구성, 정답 인덱스 검증</div>
+          <div class="test-result">✅ 3문장 → 3문제, 10문장 → 5문제 (상한) 정상 동작</div>
+        </div>
+      </div>
+      <div class="test-item">
+        <div class="test-icon">🔬</div>
+        <div>
+          <div class="test-name">getDistractors()</div>
+          <div class="test-desc">동사 핵심어 입력 시 오답이 동사인지, 명사 입력 시 오답이 명사인지 확인</div>
+          <div class="test-result">✅ 품사 일치 오답 생성 확인</div>
+        </div>
+      </div>
+      <div class="test-item">
+        <div class="test-icon">🔬</div>
+        <div>
+          <div class="test-name">updateStreak()</div>
+          <div class="test-desc">오늘/어제/이틀 전 케이스로 스트릭 증가·유지·초기화 검증</div>
+          <div class="test-result">✅ 연속일 계산 정확</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="test-section-title">INTEGRATION TEST — 통합 테스트</div>
+      <div class="test-item">
+        <div class="test-icon">🔗</div>
+        <div>
+          <div class="test-name">노트 작성 → 홈 반영</div>
+          <div class="test-desc">노트 작성 후 홈 화면 "오늘 복습" 섹션에 즉시 표시되는지 확인</div>
+          <div class="test-result">✅ useFocusEffect로 자동 갱신 확인</div>
+        </div>
+      </div>
+      <div class="test-item">
+        <div class="test-icon">🔗</div>
+        <div>
+          <div class="test-name">퀴즈 완료 → 복습일 갱신</div>
+          <div class="test-desc">퀴즈 결과에 따라 Firestore의 nextReviewDate 값이 올바르게 업데이트되는지 확인</div>
+          <div class="test-result">✅ 잘됐어요 +3일, 보통 +2일, 헷갈려요 +1일 정상 동작</div>
+        </div>
+      </div>
+      <div class="test-item">
+        <div class="test-icon">🔗</div>
+        <div>
+          <div class="test-name">로그인 → 노트 분리</div>
+          <div class="test-desc">다른 계정으로 로그인 시 각 계정의 노트가 분리되어 표시되는지 확인</div>
+          <div class="test-result">✅ userId 기반 필터링 정상 동작</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ S15 ADR ══════════ -->
+<section id="s15">
+  <div class="section-num">14 ADR</div>
+  <h2 class="slide-title">Architecture Decision Records</h2>
+  <p class="slide-sub">주요 기술 결정 사항 — 질의응답 대비</p>
+  <div class="adr-list">
+    <div class="adr-card">
+      <div class="adr-header">
+        <span class="adr-num">ADR-001</span>
+        <span class="adr-title">React Native + Expo 채택</span>
+        <span class="adr-badge"><span class="badge-accepted">Accepted</span></span>
+      </div>
+      <div class="adr-grid">
+        <div><div class="adr-section-title">CONTEXT</div><div class="adr-text">iOS·Android·Web 모두 지원하는 앱이 필요했고, 개발 인원이 1명이었음</div></div>
+        <div><div class="adr-section-title">DECISION</div><div class="adr-text">React Native + Expo SDK 56 채택. Expo Router로 파일 기반 라우팅 적용</div></div>
+        <div><div class="adr-section-title">CONSEQUENCE</div><div class="adr-text">단일 코드베이스로 3개 플랫폼 지원. 네이티브 모듈 접근은 Expo Modules API로 제한</div></div>
+      </div>
+    </div>
+    <div class="adr-card">
+      <div class="adr-header">
+        <span class="adr-num">ADR-002</span>
+        <span class="adr-title">Firebase (BaaS) 선택 — 자체 서버 대신</span>
+        <span class="adr-badge"><span class="badge-accepted">Accepted</span></span>
+      </div>
+      <div class="adr-grid">
+        <div><div class="adr-section-title">CONTEXT</div><div class="adr-text">백엔드 서버를 직접 구축할 시간이 없었고, 인증·DB를 빠르게 붙여야 했음</div></div>
+        <div><div class="adr-section-title">DECISION</div><div class="adr-text">Firebase Auth(이메일 인증) + Firestore(노트 저장)로 서버리스 구현</div></div>
+        <div><div class="adr-section-title">CONSEQUENCE</div><div class="adr-text">서버 구축·운영 비용 0원. 단, Firestore 복잡한 쿼리는 클라이언트 필터링으로 처리</div></div>
+      </div>
+    </div>
+    <div class="adr-card">
+      <div class="adr-header">
+        <span class="adr-num">ADR-003</span>
+        <span class="adr-title">AI 퀴즈: 외부 API → 자체 엔진으로 전환</span>
+        <span class="adr-badge"><span class="badge-accepted">Accepted</span></span>
+      </div>
+      <div class="adr-grid">
+        <div><div class="adr-section-title">CONTEXT</div><div class="adr-text">Anthropic API 결제 오류, Gemini API 한국 학교 계정 할당량 0 — 두 API 모두 사용 불가 상황 발생</div></div>
+        <div><div class="adr-section-title">DECISION</div><div class="adr-text">문장 파싱 + 핵심어 추출 + 품사 분류 기반 자체 퀴즈 생성 엔진 구현</div></div>
+        <div><div class="adr-section-title">CONSEQUENCE</div><div class="adr-text">API 비용 0원, 오프라인 동작 가능. 단, 복잡한 추론형 문제는 생성 불가</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ S16 INSTALL ══════════ -->
+<section id="s16">
+  <div class="section-num">15 INSTALLATION GUIDE</div>
+  <h2 class="slide-title">GitHub 설치 가이드</h2>
+  <p class="slide-sub">로컬에서 실행하는 방법</p>
+  <div class="install-steps">
+    <div class="install-step">
+      <div class="install-num">1</div>
+      <div class="install-content">
+        <div class="install-title">저장소 클론</div>
+        <div class="install-cmd">git clone https://github.com/[username]/forgetting-curve.git<br>cd forgetting-curve/forgetting-curve</div>
+      </div>
+    </div>
+    <div class="install-step">
+      <div class="install-num">2</div>
+      <div class="install-content">
+        <div class="install-title">의존성 설치</div>
+        <div class="install-cmd">npm install</div>
+      </div>
+    </div>
+    <div class="install-step">
+      <div class="install-num">3</div>
+      <div class="install-content">
+        <div class="install-title">환경 변수 설정</div>
+        <div class="install-cmd"># .env 파일 생성 후 Firebase 설정값 입력<br>EXPO_PUBLIC_FIREBASE_API_KEY=your_key<br>EXPO_PUBLIC_FIREBASE_PROJECT_ID=your_project_id</div>
+        <div class="install-note">Firebase Console → 프로젝트 설정 → 웹 앱 구성에서 값 복사</div>
+      </div>
+    </div>
+    <div class="install-step">
+      <div class="install-num">4</div>
+      <div class="install-content">
+        <div class="install-title">앱 실행</div>
+        <div class="install-cmd"># 웹 브라우저
+npx expo start --web<br><br># 모바일 (Expo Go 앱 필요)
+npx expo start</div>
+      </div>
+    </div>
+    <div class="install-step">
+      <div class="install-num">5</div>
+      <div class="install-content">
+        <div class="install-title">웹 배포 (GitHub Pages)</div>
+        <div class="install-cmd">npx expo export --platform web<br>git add . &amp;&amp; git commit -m "deploy" &amp;&amp; git push</div>
+        <div class="install-note">GitHub Pages 설정에서 루트(/)를 소스로 지정</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ S17 SCREENS ══════════ -->
+<section id="s17">
+  <div class="section-num">16 APP SCREENS</div>
+  <h2 class="slide-title">앱 화면 시연</h2>
+  <p class="slide-sub">주요 화면 구성</p>
+  <div class="screens-grid">
+    <div class="screen-item">
+      <div class="screen-label">홈 화면</div>
+      <img src="홈화면.png" alt="홈화면" class="screen-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+      <div class="screen-placeholder" style="display:none;"><span style="font-size:32px;">🏠</span>홈화면.png</div>
+    </div>
+    <div class="screen-item">
+      <div class="screen-label">노트 작성</div>
+      <img src="노트작성.png" alt="노트작성" class="screen-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+      <div class="screen-placeholder" style="display:none;"><span style="font-size:32px;">📝</span>노트작성.png</div>
+    </div>
+    <div class="screen-item">
+      <div class="screen-label">AI 퀴즈</div>
+      <img src="퀴즈.png" alt="퀴즈" class="screen-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+      <div class="screen-placeholder" style="display:none;"><span style="font-size:32px;">🤖</span>퀴즈.png</div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ S18 USAGE ══════════ -->
+<section id="s18">
+  <div class="section-num">17 HOW TO USE</div>
+  <h2 class="slide-title">활용 방안 및 기대 효과</h2>
+  <p class="slide-sub">사용자 시나리오와 실제 효과</p>
+  <div class="usage-grid">
+    <div>
+      <div style="font-size:13px;color:var(--blue);font-weight:bold;letter-spacing:1px;margin-bottom:16px;">사용자 시나리오</div>
+      <div class="scenario-steps">
+        <div class="scenario-step">
+          <div class="scenario-num">1</div>
+          <div class="scenario-text"><strong>📝 수업 후 노트 작성</strong>오늘 배운 내용을 과목·제목과 함께 기록. 앱이 내일 복습일을 자동 설정.</div>
+        </div>
+        <div class="scenario-step">
+          <div class="scenario-num">2</div>
+          <div class="scenario-text"><strong>📱 다음날 알림 확인</strong>홈 화면 "오늘 복습" 섹션에 어제 작성한 노트 등장. 탭 하면 복습 시작.</div>
+        </div>
+        <div class="scenario-step">
+          <div class="scenario-num">3</div>
+          <div class="scenario-text"><strong>🤖 AI 퀴즈 풀기</strong>노트 내용 기반 5문제 자동 생성. 점수에 따라 다음 복습일 자동 조정.</div>
+        </div>
+        <div class="scenario-step">
+          <div class="scenario-num">4</div>
+          <div class="scenario-text"><strong>🔥 스트릭 쌓기</strong>매일 복습하면 연속 복습 일수 증가. 공부 습관 형성에 동기 부여.</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:13px;color:var(--green);font-weight:bold;letter-spacing:1px;margin-bottom:16px;">기대 효과</div>
+      <div class="effect-list">
+        <div class="effect-item" style="border-color:#4a90d9;">
+          <div class="effect-title" style="color:#4a90d9;">📈 기억 유지율 향상</div>
+          <div class="effect-desc">에빙하우스 연구에 따르면 간격 반복 학습으로 기억 유지율을 최대 80%까지 높일 수 있음</div>
+        </div>
+        <div class="effect-item" style="border-color:#27ae60;">
+          <div class="effect-title" style="color:#27ae60;">⏱ 공부 효율 증가</div>
+          <div class="effect-desc">언제 복습할지 고민할 필요 없이 앱이 알아서 알려줌 → 인지 부하 감소, 학습에 집중</div>
+        </div>
+        <div class="effect-item" style="border-color:#9b59b6;">
+          <div class="effect-title" style="color:#9b59b6;">🔥 학습 지속성</div>
+          <div class="effect-desc">스트릭 시스템으로 매일 조금씩 복습하는 습관 형성. 시험 전날 벼락치기 탈출.</div>
+        </div>
+        <div class="effect-item" style="border-color:#e67e22;">
+          <div class="effect-title" style="color:#e67e22;">🎯 자기 점검</div>
+          <div class="effect-desc">단순 읽기가 아닌 퀴즈 풀기로 능동적 회상(Active Recall) 효과. 시험 적중률 향상.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ S19 CLOSING ══════════ -->
+<section id="s19">
+  <div class="section-num">18 CLOSING</div>
+  <h2>공부를 오래 기억하는<br>가장 과학적인 방법</h2>
+  <p class="closing-msg">
+    커브터디는 에빙하우스의 망각곡선 이론을 실제 앱으로 구현하여<br>
+    학생들이 더 효율적으로 공부하고 오래 기억할 수 있도록 돕습니다.<br>
+    React Native + Firebase + 자체 AI 엔진으로 제로 비용, 크로스플랫폼으로 동작합니다.
+  </p>
+  <div class="future-grid">
+    <div class="future-card">
+      <div class="future-icon">🤖</div>
+      <div class="future-title">실제 AI 연동</div>
+      <div class="future-desc">Claude API 결제 문제 해결 시 실제 AI 문제 생성으로 업그레이드. 더 자연스럽고 깊이 있는 퀴즈.</div>
+    </div>
+    <div class="future-card">
+      <div class="future-icon">🔔</div>
+      <div class="future-title">푸시 알림</div>
+      <div class="future-desc">복습 예정일 당일 아침에 알림 전송. 앱을 열지 않아도 복습 시점을 놓치지 않도록.</div>
+    </div>
+    <div class="future-card">
+      <div class="future-icon">📊</div>
+      <div class="future-title">학습 통계</div>
+      <div class="future-desc">과목별 복습 횟수, 퀴즈 정확도 추이, 누적 스트릭 차트로 학습 패턴 시각화.</div>
+    </div>
+  </div>
+  <div style="margin-top:40px;text-align:center;">
+    <span class="tag tag-blue">React Native</span>
+    <span class="tag tag-blue">Expo Router</span>
+    <span class="tag tag-blue">TypeScript</span>
+    <span class="tag tag-green">Firebase</span>
+    <span class="tag tag-purp">AI 퀴즈 엔진</span>
+    <span class="tag tag-oran">망각곡선</span>
   </div>
 </section>
 

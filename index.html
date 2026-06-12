@@ -729,31 +729,8 @@ graph TB
   <div class="section-num">07 APP STRUCTURE</div>
   <h2 class="slide-title">앱 구조 — 디렉토리</h2>
   <p class="slide-sub">레이어별 역할 분리</p>
-  <div class="dir-grid">
-    <div class="dir-tree">
-<span class="d">forgetting-curve/</span>
-├── <span class="d">app/</span>               <span class="c"># Expo Router 화면</span>
-│   ├── <span class="d">(auth)/</span>
-│   │   ├── <span class="f">login.tsx</span>
-│   │   ├── <span class="f">signup.tsx</span>
-│   │   └── <span class="f">forgot-password.tsx</span>
-│   ├── <span class="d">(tabs)/</span>
-│   │   ├── <span class="f">index.tsx</span>      <span class="c"># 홈</span>
-│   │   ├── <span class="f">calendar.tsx</span>
-│   │   └── <span class="f">settings.tsx</span>
-│   └── <span class="d">note/</span>
-│       ├── <span class="f">create.tsx</span>
-│       ├── <span class="f">list.tsx</span>
-│       ├── <span class="f">[id].tsx</span>       <span class="c"># 동적 라우트</span>
-│       └── <span class="f">quiz.tsx</span>
-├── <span class="d">services/</span>          <span class="c"># 비즈니스 로직</span>
-│   ├── <span class="f">firebase.ts</span>
-│   ├── <span class="f">auth.ts</span>
-│   └── <span class="f">notes.ts</span>
-├── <span class="f">types/index.ts</span>     <span class="c"># TypeScript 타입</span>
-└── <span class="f">app.json</span>           <span class="c"># Expo 설정</span>
-    </div>
-    <div class="layer-desc">
+  <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:8px;">
+    <div class="layer-desc" style="display:contents;">
       <div class="layer-card" style="border-color:#4a90d9;">
         <div class="layer-title" style="color:#4a90d9;">🖥 Presentation Layer (app/)</div>
         <div class="layer-text">화면 렌더링과 사용자 인터랙션 처리. Expo Router로 파일 경로 = URL 경로. 인증/탭/노트 3개 영역으로 분리.</div>
@@ -770,7 +747,6 @@ graph TB
         <div class="layer-title" style="color:#e67e22;">💾 Local Cache (AsyncStorage)</div>
         <div class="layer-text">스트릭 날짜·횟수, NEW 뱃지 기준 타임스탬프 저장. Firebase 호출 없이 빠른 로컬 상태 유지.</div>
       </div>
-    </div>
   </div>
 </section>
 

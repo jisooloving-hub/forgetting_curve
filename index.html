@@ -840,63 +840,6 @@ graph TB
   </div>
 </section>
 
-<!-- ══════════ S11 QUALITY ══════════ -->
-<section id="s11">
-  <div class="section-num">10 QUALITY</div>
-  <h2 class="slide-title">성능 최적화 & 코드 품질 관리</h2>
-  <p class="slide-sub">더 빠르고, 더 안정적으로</p>
-  <div class="pq-grid">
-    <div class="pq-section">
-      <h4>⚡ 성능 최적화</h4>
-      <div class="pq-item">
-        <div class="pq-item-icon">🎯</div>
-        <div>
-          <div class="pq-item-title">useFocusEffect 사용</div>
-          <div class="pq-item-desc">useEffect 대신 useFocusEffect로 화면 포커스 시에만 데이터 갱신. 불필요한 Firestore 호출 최소화.</div>
-        </div>
-      </div>
-      <div class="pq-item">
-        <div class="pq-item-icon">📦</div>
-        <div>
-          <div class="pq-item-title">AsyncStorage 로컬 캐싱</div>
-          <div class="pq-item-desc">스트릭, NEW 뱃지 등 자주 읽히는 상태를 로컬 저장. 홈 화면 진입 시 Firebase 요청 없이 즉시 표시.</div>
-        </div>
-      </div>
-      <div class="pq-item">
-        <div class="pq-item-icon">🔍</div>
-        <div>
-          <div class="pq-item-title">클라이언트 사이드 필터링</div>
-          <div class="pq-item-desc">홈 화면 오늘/내일 분류를 전체 노트를 한 번 가져와 클라이언트에서 필터. Firestore 인덱스 없이 복수 쿼리 회피.</div>
-        </div>
-      </div>
-    </div>
-    <div class="pq-section">
-      <h4>🛡 코드 품질 관리</h4>
-      <div class="pq-item">
-        <div class="pq-item-icon">🔷</div>
-        <div>
-          <div class="pq-item-title">TypeScript 타입 정의</div>
-          <div class="pq-item-desc">Note 인터페이스, 서비스 함수 반환 타입 명시. 컴파일 단계에서 타입 오류를 잡아 런타임 버그 예방.</div>
-        </div>
-      </div>
-      <div class="pq-item">
-        <div class="pq-item-icon">🏗</div>
-        <div>
-          <div class="pq-item-title">서비스 레이어 분리</div>
-          <div class="pq-item-desc">Firebase 로직을 services/에 집중. 화면 컴포넌트는 서비스 함수만 호출 → 테스트 용이, 유지보수성 향상.</div>
-        </div>
-      </div>
-      <div class="pq-item">
-        <div class="pq-item-icon">🔒</div>
-        <div>
-          <div class="pq-item-title">환경 변수 분리</div>
-          <div class="pq-item-desc">API 키를 .env 파일에 EXPO_PUBLIC_ 접두사로 관리. .gitignore로 커밋 방지, 민감 정보 보호.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ══════════ S13 BUILD & DEPLOY ══════════ -->
 <section id="s13">
   <div class="section-num">12 BUILD & DEPLOY</div>

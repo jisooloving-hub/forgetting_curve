@@ -944,69 +944,6 @@ graph TB
   </table>
 </section>
 
-<!-- ══════════ S14 TEST ══════════ -->
-<section id="s14">
-  <div class="section-num">13 TESTING</div>
-  <h2 class="slide-title">테스트 결과</h2>
-  <p class="slide-sub">단위 테스트 · 통합 테스트</p>
-  <div class="test-grid">
-    <div>
-      <div class="test-section-title">UNIT TEST — 단위 테스트</div>
-      <div class="test-item">
-        <div class="test-icon">🔬</div>
-        <div>
-          <div class="test-name">generateQuestions()</div>
-          <div class="test-desc">다양한 길이의 노트 입력 → 문제 수, 선지 구성, 정답 인덱스 검증</div>
-          <div class="test-result">✅ 3문장 → 3문제, 10문장 → 5문제 (상한) 정상 동작</div>
-        </div>
-      </div>
-      <div class="test-item">
-        <div class="test-icon">🔬</div>
-        <div>
-          <div class="test-name">getDistractors()</div>
-          <div class="test-desc">동사 핵심어 입력 시 오답이 동사인지, 명사 입력 시 오답이 명사인지 확인</div>
-          <div class="test-result">✅ 품사 일치 오답 생성 확인</div>
-        </div>
-      </div>
-      <div class="test-item">
-        <div class="test-icon">🔬</div>
-        <div>
-          <div class="test-name">updateStreak()</div>
-          <div class="test-desc">오늘/어제/이틀 전 케이스로 스트릭 증가·유지·초기화 검증</div>
-          <div class="test-result">✅ 연속일 계산 정확</div>
-        </div>
-      </div>
-    </div>
-    <div>
-      <div class="test-section-title">INTEGRATION TEST — 통합 테스트</div>
-      <div class="test-item">
-        <div class="test-icon">🔗</div>
-        <div>
-          <div class="test-name">노트 작성 → 홈 반영</div>
-          <div class="test-desc">노트 작성 후 홈 화면 "오늘 복습" 섹션에 즉시 표시되는지 확인</div>
-          <div class="test-result">✅ useFocusEffect로 자동 갱신 확인</div>
-        </div>
-      </div>
-      <div class="test-item">
-        <div class="test-icon">🔗</div>
-        <div>
-          <div class="test-name">퀴즈 완료 → 복습일 갱신</div>
-          <div class="test-desc">퀴즈 결과에 따라 Firestore의 nextReviewDate 값이 올바르게 업데이트되는지 확인</div>
-          <div class="test-result">✅ 잘됐어요 +3일, 보통 +2일, 헷갈려요 +1일 정상 동작</div>
-        </div>
-      </div>
-      <div class="test-item">
-        <div class="test-icon">🔗</div>
-        <div>
-          <div class="test-name">로그인 → 노트 분리</div>
-          <div class="test-desc">다른 계정으로 로그인 시 각 계정의 노트가 분리되어 표시되는지 확인</div>
-          <div class="test-result">✅ userId 기반 필터링 정상 동작</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ══════════ S15 ADR ══════════ -->
 <section id="s15">
   <div class="section-num">14 ADR</div>

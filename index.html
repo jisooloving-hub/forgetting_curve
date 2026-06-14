@@ -897,48 +897,6 @@ graph TB
   </div>
 </section>
 
-<!-- ══════════ S12 DEV ENV ══════════ -->
-<section id="s12">
-  <div class="section-num">11 DEV ENVIRONMENT</div>
-  <h2 class="slide-title">개발 환경 설정</h2>
-  <p class="slide-sub">로컬에서 실행하기 위한 구성</p>
-  <div class="env-grid">
-    <div class="env-card">
-      <div class="env-title">개발 도구</div>
-      <div class="env-row"><span class="env-key">IDE</span><span class="env-val">VS Code</span></div>
-      <div class="env-row"><span class="env-key">Runtime</span><span class="env-val">Node.js 18+</span></div>
-      <div class="env-row"><span class="env-key">Package Manager</span><span class="env-val">npm</span></div>
-      <div class="env-row"><span class="env-key">Framework</span><span class="env-val">Expo SDK 56</span></div>
-      <div class="env-row"><span class="env-key">Language</span><span class="env-val">TypeScript 5</span></div>
-      <div class="env-row"><span class="env-key">Platform</span><span class="env-val">Windows 11</span></div>
-    </div>
-    <div class="env-card">
-      <div class="env-title">환경 변수 (.env)</div>
-      <div class="cmd-block">
-        <span class="comment"># Firebase 설정</span><br>
-        <span class="prompt">EXPO_PUBLIC_</span><span class="cmd">FIREBASE_API_KEY=...</span><br>
-        <span class="prompt">EXPO_PUBLIC_</span><span class="cmd">FIREBASE_PROJECT_ID=...</span><br>
-        <span class="comment"># AI API (선택)</span><br>
-        <span class="prompt">EXPO_PUBLIC_</span><span class="cmd">ANTHROPIC_API_KEY=...</span>
-      </div>
-      <div style="margin-top:12px;font-size:20px;color:var(--lgray);">
-        ⚠️ .env는 .gitignore에 포함 — 저장소에 커밋되지 않음
-      </div>
-    </div>
-    <div class="env-card" style="grid-column:1/-1;">
-      <div class="env-title">로컬 실행 명령어</div>
-      <div class="cmd-block">
-        <span class="comment"># 의존성 설치</span><br>
-        <span class="prompt">$</span> <span class="cmd">cd forgetting-curve &amp;&amp; npm install</span><br><br>
-        <span class="comment"># 개발 서버 시작 (웹 브라우저)</span><br>
-        <span class="prompt">$</span> <span class="cmd">npx expo start --web</span><br><br>
-        <span class="comment"># 모바일 (Expo Go 앱으로 QR 스캔)</span><br>
-        <span class="prompt">$</span> <span class="cmd">npx expo start</span>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- ══════════ S13 BUILD & DEPLOY ══════════ -->
 <section id="s13">
   <div class="section-num">12 BUILD & DEPLOY</div>
